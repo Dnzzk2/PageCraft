@@ -57,6 +57,19 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+
+  /* 中文字体平滑优化 */
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 针对中文内容的字间距优化 */
+  :lang(zh),
+  :lang(zh-CN) {
+    letter-spacing: 0.05em;
+  }
 }
 
 @layer base {
