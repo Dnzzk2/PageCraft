@@ -1,12 +1,10 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { siteMetadata } from "@/script/metadata";
 
-export const metadata: Metadata = {
-  title: "PageCraft - 后台模板生成器",
-  description: "快速生成后台管理系统模板代码",
-};
+export const metadata = siteMetadata;
 
 export default function RootLayout({
   children,
@@ -22,7 +20,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SidebarProvider>
+            <AppSidebar />
+            <main className="flex-1">
+              <div className="header-hight flex items-center px-1">
+                <SidebarTrigger />
+              </div>
+              {children}
+            </main>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
