@@ -4,7 +4,7 @@ import { Github } from "lucide-react";
 
 export function Footer() {
   return (
-    <div className="flex h-32 items-center justify-center rounded-lg bg-[#f6f6f7] dark:bg-background/20 border border-border/40 shadow-lg shadow-purple-100 dark:shadow-none">
+    <div className="flex h-32 items-center justify-center rounded-lg bg-[#e8e8e9] dark:bg-background/20 border border-border/40 shadow-lg shadow-purple-100 dark:shadow-none">
       <a
         href="https://github.com/Dnzzk2/PageCraft"
         target="_blank"

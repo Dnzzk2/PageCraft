@@ -23,7 +23,7 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <main className="flex-1">
-              <div className="header-hight flex items-center px-1">
+              <div className="header-hight flex items-center px-1 bg-white dark:bg-slate-400/10">
                 <SidebarTrigger />
               </div>
               {children}
