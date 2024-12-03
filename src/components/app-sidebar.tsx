@@ -17,12 +17,12 @@ import { Footer } from "./layout/footer";
 
 const sidebarItems = [
   {
-    label: "基础组件",
+    label: "基础模板",
     icon: <ShellIcon />,
     url: "/",
   },
   {
-    label: "联动组件",
+    label: "联动模板",
     icon: <LinkIcon />,
     url: "/plus",
   },

@@ -15,10 +15,10 @@ import {
 import genProTableTemplate from "@/lib/generated/genProTable";
 
 const info: InfoType = {
-  title: "ProTable页面模板",
-  description: "快速构建ProTable页面，最基础的模板",
+  title: "ProTable 页面模板",
+  description: "快速构建 ProTable 页面，最基础的模板。",
   updatedAt: "2024-12-02",
-  language: "javascript",
+  language: "jsx",
   template: genProTableTemplate,
 };
 
@@ -31,7 +31,7 @@ const ProTableTemplates = () => {
       </CardHeader>
       <CardContent>
         <SyntaxHighlighter
-          language="javascript"
+          language={info.language}
           style={oneDark}
           className="syntax-highlighter"
           customStyle={{
@@ -39,7 +39,7 @@ const ProTableTemplates = () => {
             height: "300px",
           }}
         >
-          {info.template({ isSort: true  })}
+          {info.template({ isSort: true })}
         </SyntaxHighlighter>
       </CardContent>
       <CardFooter>
