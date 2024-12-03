@@ -2,7 +2,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { siteMetadata } from "@/script/metadata";
+import { siteMetadata } from "@/lib/script/metadata";
 
 export const metadata = siteMetadata;
 
