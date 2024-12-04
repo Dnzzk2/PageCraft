@@ -1,31 +1,25 @@
-export interface GenProTableType {
-  isSort: boolean;
+import template from "lodash.template";
+
+interface ProTableConfig {
+  isSort?: boolean;
+  headerTitle?: string;
+  rowKey?: string;
 }
 
-const genImports = () => {
-  return `import ProTable from '@ant-design/pro-table';
+// 注意这里模板的换行处理
+const baseTemplate = `import ProTable from '@ant-design/pro-table';
 import React, { useState } from 'react';
 import { useRef } from 'react';
 import { handleTableResponse } from '@/utils/utils';
-import { queryPageList } from './service';`;
-};
+import { queryPageList } from './service';
 
-const genState = (isSort: boolean) => {
-  let temp = `const formRef = useRef();
-  const actionRef = useRef();`;
-
-  if (isSort) {
-    temp += `\n  const [pageInfo, setPageInfo] = useState({});`;
-  }
-  return temp;
-};
-
-const generateIndexColumn = (isSort: boolean) => {
-  let temp = "";
-  if (!isSort) {
-    return "";
-  } else {
-    temp += `[\n    {
+const Index = () => {
+  const formRef = useRef();
+  const actionRef = useRef();<% if (isSort) { %>
+  const [pageInfo, setPageInfo] = useState({});<% } %>
+  
+  const columns = [<% if (isSort) { %>
+    {
       title: '序号',
       dataIndex: 'index',
       key: 'index',
@@ -33,30 +27,17 @@ const generateIndexColumn = (isSort: boolean) => {
       hideInSearch: true,
       width: '50px',
       render: (_, record, index) => pageInfo.pageSize * (pageInfo.current - 1) + index + 1,
-    },
-  ]`;
-  }
-  return temp;
-};
-
-export default function genProTableTemplate(props: GenProTableType): string {
-  const { isSort } = props;
-
-  let template = `${genImports()}
-  
-const Index = () => {
-  ${genState(isSort)}
-  
-  const columns = ${generateIndexColumn(isSort)}
+    },<% } %>
+  ];
 
   return (
     <ProTable
-      headerTitle=""
+      headerTitle="<%= headerTitle %>"
       toolBarRender={() => []}
       actionRef={actionRef}
       formRef={formRef}
       columns={columns}
-      rowKey=""
+      rowKey="<%= rowKey %>"
       defaultSize="small"
       search={{ collapsed: false, collapseRender: false, labelWidth: 'auto' }}
       beforeSearchSubmit={(params) => {
@@ -69,14 +50,10 @@ const Index = () => {
         return handleTableResponse({ actionRef, res });
       }}
       pagination={{
-        defaultPageSize: 10,
-        ${
-          isSort
-            ? `  onChange: (current, pageSize) => {
+        defaultPageSize: 10,<% if (isSort) { %>
+        onChange: (current, pageSize) => {
           setPageInfo({ current, pageSize });
-        },`
-            : ""
-        }
+        },<% } %>
       }}
       form={{
         ignoreRules: false,
@@ -86,8 +63,13 @@ const Index = () => {
   );
 };
 
-export default Index;
-`;
+export default Index;`;
 
-  return template.trim();
+export function generateProTable(config: ProTableConfig): string {
+  const compiled = template(baseTemplate);
+  return compiled({
+    isSort: config.isSort ?? false,
+    headerTitle: config.headerTitle ?? "",
+    rowKey: config.rowKey ?? "id",
+  }).trim();
 }

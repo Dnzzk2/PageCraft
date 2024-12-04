@@ -3,6 +3,7 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { siteMetadata } from "@/lib/script/metadata";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata = siteMetadata;
 
@@ -27,6 +28,7 @@ export default function RootLayout({
                 <SidebarTrigger />
               </div>
               {children}
+              <Toaster />
             </main>
           </SidebarProvider>
         </ThemeProvider>
