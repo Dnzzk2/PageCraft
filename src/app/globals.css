@@ -29,6 +29,18 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  :root {
+    --header-height: 48px;
   }
 
   .dark {
@@ -56,6 +68,27 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  /* 中文字体平滑优化 */
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 针对中文内容的字间距优化 */
+  :lang(zh),
+  :lang(zh-CN) {
+    letter-spacing: 0.05em;
   }
 }
 
@@ -65,5 +98,34 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* 统一头部高度 */
+  .header-hight {
+    height: var(--header-height);
+  }
+
+  .bg-main {
+    @apply bg-muted dark:bg-background/10;
+  }
+
+  .syntax-highlighter::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .syntax-highlighter::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .syntax-highlighter::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/50 hover:bg-muted-foreground transition-colors;
+    border-radius: 4px;
+  }
+
+  .syntax-highlighter::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+    width: 0;
+    height: 0;
   }
 }
