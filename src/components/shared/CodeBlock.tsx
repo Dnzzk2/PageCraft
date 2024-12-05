@@ -9,7 +9,10 @@ interface CodeBlockProps {
   code: string;
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
+const CodeBlock: React.FC<CodeBlockProps> = ({
+  language,
+  code,
+}) => {
   const { toast } = useToast();
 
   const copyToClipboard = async () => {
@@ -56,8 +59,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ language, code }) => {
         className="syntax-highlighter"
         customStyle={{
           fontSize: "12px",
-          height: "300px",
           paddingTop: "24px",
+          maxHeight: "200px",
         }}
       >
         {code}

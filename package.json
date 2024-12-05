@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "devIp": "node -e \"const os=require('os');const nets=os.networkInterfaces();let ip='0.0.0.0';for(const name of Object.keys(nets)){for(const net of nets[name]){if(!net.internal&&net.family==='IPv4'){ip=net.address;break;}}} console.log('\\x1b[36m启动地址: http://'+ip+':3000\\x1b[0m'); require('child_process').spawn('next',['dev','-H',ip,'-p','3000'],{stdio:'inherit',shell:true}).on('error',console.error);\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-separator": "^1.1.0",
@@ -20,6 +22,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "lodash": "^4.17.21",
     "lodash.template": "^4.5.0",
     "lucide-react": "^0.462.0",
     "next": "15.0.3",

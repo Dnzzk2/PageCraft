@@ -3,5 +3,4 @@ export interface InfoType {
   description: string;
   updatedAt: string;
   language: string;
-  template: (...args: any[]) => string;
 }
