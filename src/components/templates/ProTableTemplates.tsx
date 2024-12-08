@@ -25,8 +25,8 @@ const info: InfoType = {
 
 const ProTableTemplates = () => {
   const [isSort, setIsSort] = useState(false);
-  const [isPageHeader, setIsPageHeader] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
+  const [isPageHeader, setIsPageHeader] = useState(true);
+  const [isSearch, setIsSearch] = useState(true);
   const [isChanging, setIsChanging] = useState(false);
 
   const change = (func: (value: any) => void, value: boolean) => {
@@ -58,12 +58,6 @@ const ProTableTemplates = () => {
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-2 h-[60px]">
-          <Label htmlFor="sort-mode">序号列</Label>
-          <Switch
-            id="sort-mode"
-            checked={isSort}
-            onCheckedChange={handleSortChange}
-          />
           <Label htmlFor="page-header-mode">页头</Label>
           <Switch
             id="page-header-mode"
@@ -75,6 +69,12 @@ const ProTableTemplates = () => {
             id="search-mode"
             checked={isSearch}
             onCheckedChange={handleSearchChange}
+          />
+          <Label htmlFor="sort-mode">序号列</Label>
+          <Switch
+            id="sort-mode"
+            checked={isSort}
+            onCheckedChange={handleSortChange}
           />
         </div>
         <LoadingOverlay loading={isChanging}>
