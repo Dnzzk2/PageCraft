@@ -5,7 +5,7 @@ import ModalTemplates from "@/components/templates/ModalTemplates";
 
 export default function Home() {
   return (
-    <main className="h-[calc(100vh-var(--header-height))] overflow-y-auto bg-main p-6 @container">
+    <main className="main-container">
       <div className="flex flex-col gap-6 @[800px]:hidden">
         <ProTableTemplates />
         <ModalTemplates />
