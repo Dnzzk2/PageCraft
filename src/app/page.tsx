@@ -2,6 +2,7 @@
 
 import ProTableTemplates from "@/components/templates/ProTableTemplates";
 import ModalTemplates from "@/components/templates/ModalTemplates";
+import DrawerTemplates from "@/components/templates/DrawerTemplates";
 
 export default function Home() {
   return (
@@ -17,6 +18,9 @@ export default function Home() {
           </div>
           <div className="break-inside-avoid mb-6">
             <ModalTemplates />
+          </div>
+          <div className="break-inside-avoid mb-6">
+            <DrawerTemplates />
           </div>
         </div>
       </div>

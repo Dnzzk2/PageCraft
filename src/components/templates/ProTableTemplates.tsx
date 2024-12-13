@@ -15,6 +15,7 @@ import { Label } from "../ui/label";
 import { generateProTable } from "@/lib/generated/proTable/genProTable";
 import CodeBlock from "../shared/CodeBlock";
 import LoadingOverlay from "../shared/LoadingOverlay";
+import { useChange } from "@/lib/hooks/useChange";
 
 const info: InfoType = {
   title: "ProTable 页面模板",
@@ -27,26 +28,18 @@ const ProTableTemplates = () => {
   const [isSort, setIsSort] = useState(false);
   const [isPageHeader, setIsPageHeader] = useState(true);
   const [isSearch, setIsSearch] = useState(true);
-  const [isChanging, setIsChanging] = useState(false);
-
-  const change = (func: (value: any) => void, value: boolean) => {
-    setIsChanging(true);
-    setTimeout(() => {
-      func(value);
-      setIsChanging(false);
-    }, 300);
-  };
+  const { isChanging, changeStatus } = useChange();
 
   const handleSortChange = (checked: boolean) => {
-    change(setIsSort, checked);
+    changeStatus(setIsSort, checked);
   };
 
   const handlePageHeaderChange = (checked: boolean) => {
-    change(setIsPageHeader, checked);
+    changeStatus(setIsPageHeader, checked);
   };
 
   const handleSearchChange = (checked: boolean) => {
-    change(setIsSearch, checked);
+    changeStatus(setIsSearch, checked);
   };
 
   return (

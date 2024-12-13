@@ -14,7 +14,7 @@ const to<%= componentName %> = (record = {}) => {
   set<%= componentName %>Open(true);
 };`;
 
-export function generateModalState(config: CommonConfig): string {
+export function generateState(config: CommonConfig): string {
   const { componentName } = config;
   const baseName = lowerFirstLetter(componentName);
 
