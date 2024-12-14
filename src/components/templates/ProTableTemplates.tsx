@@ -79,7 +79,7 @@ const ProTableTemplates = () => {
       </CardContent>
       <CardFooter>
         <span className="text-xs text-muted-foreground ml-1">
-          更新时间:{info.updatedAt}
+          更新时间：{info.updatedAt}
         </span>
       </CardFooter>
     </Card>

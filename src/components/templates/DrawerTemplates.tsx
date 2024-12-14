@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { InfoType } from "@/lib/types/InfoType";
 import {
   Card,
@@ -20,13 +20,12 @@ import {
 } from "@/lib/generated/drawer";
 import CodeBlock from "../shared/CodeBlock";
 import LoadingOverlay from "../shared/LoadingOverlay";
-import { debounce } from "lodash";
 import { Switch } from "../ui/switch";
 import { useChange } from "@/lib/hooks/useChange";
 
 const info: InfoType = {
   title: "Drawer 抽屉模板",
-  description: "最基础的Drawer抽屉模板，快速构建主页。",
+  description: "最基础的Drawer抽屉模板，内容自定义。",
   updatedAt: "2024-12-13",
   language: "jsx",
 };
@@ -36,17 +35,9 @@ const DrawerTemplates = () => {
   const { isChanging, changeStatus } = useChange();
   const [isFooter, setIsFooter] = useState(false);
 
-  const debouncedNameChange = useCallback(
-    debounce((value: string) => {
-      changeStatus(setComponentName, value);
-    }, 500),
-    []
-  );
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    e.target.value = value;
-    debouncedNameChange(value);
+    changeStatus(setComponentName, value);
   };
 
   const config = { componentName, isFooter };
@@ -99,7 +90,7 @@ const DrawerTemplates = () => {
               />
             </div>
             <div>
-              <h3 className="text-base font-semibold mb-1">4. Modal组件</h3>
+              <h3 className="text-base font-semibold mb-1">4. Drawer组件</h3>
               <CodeBlock
                 language={info.language}
                 code={generateDrawerComponent(config)}
@@ -110,7 +101,7 @@ const DrawerTemplates = () => {
       </CardContent>
       <CardFooter>
         <span className="text-xs text-muted-foreground ml-1">
-          更新时间:{info.updatedAt}
+          更新时间：{info.updatedAt}
         </span>
       </CardFooter>
     </Card>

@@ -10,6 +10,7 @@ export default function Home() {
       <div className="flex flex-col gap-6 @[800px]:hidden">
         <ProTableTemplates />
         <ModalTemplates />
+        <DrawerTemplates />
       </div>
       <div className="hidden @[800px]:block">
         <div className="columns-2 gap-6">

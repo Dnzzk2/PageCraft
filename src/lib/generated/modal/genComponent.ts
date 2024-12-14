@@ -2,8 +2,8 @@ import template from "lodash.template";
 import { ModalConfig } from "./config";
 import { lowerFirstLetter } from "../../utils";
 
-const componentTemplate = `import { Modal } from 'antd';
-import React from 'react';
+const componentTemplate = `import React from 'react';
+import { Modal } from 'antd';
 
 const <%= componentName %> = (props) => {
   const { <%= lowerComponentName %>Open, on<%= componentName %>Cancel, <%= lowerComponentName %>Value } = props;

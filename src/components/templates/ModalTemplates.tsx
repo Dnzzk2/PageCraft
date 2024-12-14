@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { InfoType } from "@/lib/types/InfoType";
 import {
   Card,
@@ -20,7 +20,6 @@ import {
 } from "@/lib/generated/modal";
 import CodeBlock from "../shared/CodeBlock";
 import LoadingOverlay from "../shared/LoadingOverlay";
-import { debounce } from "lodash";
 import { useChange } from "@/lib/hooks/useChange";
 
 const info: InfoType = {
@@ -34,17 +33,9 @@ const ModalTemplates = () => {
   const [componentName, setComponentName] = useState("NewModal");
   const { isChanging, changeStatus } = useChange();
 
-  const debouncedNameChange = useCallback(
-    debounce((value: string) => {
-      changeStatus(setComponentName, value);
-    }, 500),
-    []
-  );
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    e.target.value = value;
-    debouncedNameChange(value);
+    changeStatus(setComponentName, value);
   };
 
   const config = { componentName };
@@ -102,7 +93,7 @@ const ModalTemplates = () => {
       </CardContent>
       <CardFooter>
         <span className="text-xs text-muted-foreground ml-1">
-          更新时间:{info.updatedAt}
+          更新时间：{info.updatedAt}
         </span>
       </CardFooter>
     </Card>

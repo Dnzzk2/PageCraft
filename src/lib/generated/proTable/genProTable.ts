@@ -2,17 +2,16 @@ import template from "lodash.template";
 import { ProTableConfig } from "./config";
 
 // 注意这里模板的换行处理
-const baseTemplate = `import ProTable from '@ant-design/pro-table';<%if (isPageHeader) {%>
+const baseTemplate = `import React, { useState, useRef } from 'react';
+import ProTable from '@ant-design/pro-table';<%if (isPageHeader) {%>
 import { PageHeaderWrapper } from '@ant-design/pro-layout';<%}%>
-import React, { useState } from 'react';
-import { useRef } from 'react';
 import { handleTableResponse } from '@/utils/utils';
 import { queryPageList } from './service';
 
 const Index = () => {
   const formRef = useRef();
   const actionRef = useRef();<% if (isSort) { %>
-  const [pageInfo, setPageInfo] = useState({});<% } %>
+  const [pageInfo, setPageInfo] = useState({ current: 1, pageSize: 10 });<% } %>
   
   const columns = [<% if (isSort) { %>
     {
