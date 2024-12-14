@@ -15,6 +15,7 @@ import { Label } from "../ui/label";
 import { generateProTable } from "@/lib/generated/proTable/genProTable";
 import CodeBlock from "../shared/CodeBlock";
 import LoadingOverlay from "../shared/LoadingOverlay";
+import { useChange } from "@/lib/hooks/useChange";
 
 const info: InfoType = {
   title: "ProTable 页面模板",
@@ -25,28 +26,20 @@ const info: InfoType = {
 
 const ProTableTemplates = () => {
   const [isSort, setIsSort] = useState(false);
-  const [isPageHeader, setIsPageHeader] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
-  const [isChanging, setIsChanging] = useState(false);
-
-  const change = (func: (value: any) => void, value: boolean) => {
-    setIsChanging(true);
-    setTimeout(() => {
-      func(value);
-      setIsChanging(false);
-    }, 300);
-  };
+  const [isPageHeader, setIsPageHeader] = useState(true);
+  const [isSearch, setIsSearch] = useState(true);
+  const { isChanging, changeStatus } = useChange();
 
   const handleSortChange = (checked: boolean) => {
-    change(setIsSort, checked);
+    changeStatus(setIsSort, checked);
   };
 
   const handlePageHeaderChange = (checked: boolean) => {
-    change(setIsPageHeader, checked);
+    changeStatus(setIsPageHeader, checked);
   };
 
   const handleSearchChange = (checked: boolean) => {
-    change(setIsSearch, checked);
+    changeStatus(setIsSearch, checked);
   };
 
   return (
@@ -58,12 +51,6 @@ const ProTableTemplates = () => {
       </CardHeader>
       <CardContent>
         <div className="flex items-center space-x-2 h-[60px]">
-          <Label htmlFor="sort-mode">序号列</Label>
-          <Switch
-            id="sort-mode"
-            checked={isSort}
-            onCheckedChange={handleSortChange}
-          />
           <Label htmlFor="page-header-mode">页头</Label>
           <Switch
             id="page-header-mode"
@@ -76,6 +63,12 @@ const ProTableTemplates = () => {
             checked={isSearch}
             onCheckedChange={handleSearchChange}
           />
+          <Label htmlFor="sort-mode">序号列</Label>
+          <Switch
+            id="sort-mode"
+            checked={isSort}
+            onCheckedChange={handleSortChange}
+          />
         </div>
         <LoadingOverlay loading={isChanging}>
           <CodeBlock
@@ -86,7 +79,7 @@ const ProTableTemplates = () => {
       </CardContent>
       <CardFooter>
         <span className="text-xs text-muted-foreground ml-1">
-          更新时间:{info.updatedAt}
+          更新时间：{info.updatedAt}
         </span>
       </CardFooter>
     </Card>

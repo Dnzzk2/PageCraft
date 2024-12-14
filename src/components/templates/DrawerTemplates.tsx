@@ -13,32 +13,34 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
-  generateModalComponent,
+  generateDrawerComponent,
   generateImport,
   generateState,
   generateRender,
-} from "@/lib/generated/modal";
+} from "@/lib/generated/drawer";
 import CodeBlock from "../shared/CodeBlock";
 import LoadingOverlay from "../shared/LoadingOverlay";
+import { Switch } from "../ui/switch";
 import { useChange } from "@/lib/hooks/useChange";
 
 const info: InfoType = {
-  title: "Modal 弹窗模板",
-  description: "最基础的Modal弹窗模板，内容自定义。",
-  updatedAt: "2024-12-04",
+  title: "Drawer 抽屉模板",
+  description: "最基础的Drawer抽屉模板，内容自定义。",
+  updatedAt: "2024-12-13",
   language: "jsx",
 };
 
-const ModalTemplates = () => {
-  const [componentName, setComponentName] = useState("NewModal");
+const DrawerTemplates = () => {
+  const [componentName, setComponentName] = useState("NewDrawer");
   const { isChanging, changeStatus } = useChange();
+  const [isFooter, setIsFooter] = useState(false);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     changeStatus(setComponentName, value);
   };
 
-  const config = { componentName };
+  const config = { componentName, isFooter };
 
   return (
     <Card className="rounded-lg shadow dark:bg-zinc-900">
@@ -56,6 +58,12 @@ const ModalTemplates = () => {
             onChange={handleNameChange}
             className="max-w-[200px]"
             placeholder="输入组件名称"
+          />
+          <Label htmlFor="isFooter">是否显示底部</Label>
+          <Switch
+            id="isFooter"
+            checked={isFooter}
+            onCheckedChange={() => changeStatus(setIsFooter, !isFooter)}
           />
         </div>
         <LoadingOverlay loading={isChanging}>
@@ -82,10 +90,10 @@ const ModalTemplates = () => {
               />
             </div>
             <div>
-              <h3 className="text-base font-semibold mb-1">4. Modal组件</h3>
+              <h3 className="text-base font-semibold mb-1">4. Drawer组件</h3>
               <CodeBlock
                 language={info.language}
-                code={generateModalComponent(config)}
+                code={generateDrawerComponent(config)}
               />
             </div>
           </div>
@@ -100,4 +108,4 @@ const ModalTemplates = () => {
   );
 };
 
-export default ModalTemplates;
+export default DrawerTemplates;

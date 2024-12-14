@@ -10,7 +10,7 @@ const renderTemplate = `{<%= baseName %>Open && (
   />
 )}`;
 
-export function generateModalRender(config: CommonConfig): string {
+export function generateRender(config: CommonConfig): string {
   const { componentName } = config;
   const baseName = lowerFirstLetter(componentName);
 

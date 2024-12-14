@@ -2,11 +2,11 @@ import template from "lodash.template";
 import { ModalConfig } from "./config";
 import { lowerFirstLetter } from "../../utils";
 
-const componentTemplate = `import { Modal } from 'antd';
-import React from 'react';
+const componentTemplate = `import React from 'react';
+import { Modal } from 'antd';
 
 const <%= componentName %> = (props) => {
-  const { <%= baseName %>Open, on<%= componentName %>Cancel, <%= baseName %>Value } = props;
+  const { <%= lowerComponentName %>Open, on<%= componentName %>Cancel, <%= lowerComponentName %>Value } = props;
 
   const onOk = () => {
     on<%= componentName %>Cancel();
@@ -18,7 +18,7 @@ const <%= componentName %> = (props) => {
       destroyOnClose
       title="弹窗"
       maskClosable={false}
-      open={<%= baseName %>Open}
+      open={<%= lowerComponentName %>Open}
       onCancel={on<%= componentName %>Cancel}
       onOk={onOk}
     >
@@ -30,11 +30,11 @@ export default <%= componentName %>;`;
 
 export function generateModalComponent(config: ModalConfig): string {
   const { componentName } = config;
-  const baseName = lowerFirstLetter(componentName);
+  const lowerComponentName = lowerFirstLetter(componentName);
 
   const compiled = template(componentTemplate);
   return compiled({
     componentName,
-    baseName,
+    lowerComponentName,
   }).trim();
 }
