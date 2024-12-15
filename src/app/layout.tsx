@@ -24,7 +24,7 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <main className="w-full overflow-x-auto">
-              <div className="header-hight flex items-center px-1 bg-white dark:bg-slate-400/10">
+              <div className="fixed w-full z-[9999] header-hight flex items-center px-1 bg-white dark:bg-[#18181b]  border-b border-zinc-200 dark:border-zinc-800">
                 <SidebarTrigger />
               </div>
               {children}

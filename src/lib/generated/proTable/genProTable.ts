@@ -13,17 +13,20 @@ const Index = () => {
   const actionRef = useRef();<% if (isSort) { %>
   const [pageInfo, setPageInfo] = useState({ current: 1, pageSize: 10 });<% } %>
   
-  const columns = [<% if (isSort) { %>
-    {
+  const columns = [<% if (isSort) { %>{
       title: '序号',
-      dataIndex: 'index',
+      dataIndex: 'index', 
       key: 'index',
       align: 'center',
       hideInSearch: true,
       width: '50px',
       render: (_, record, index) => pageInfo.pageSize * (pageInfo.current - 1) + index + 1,
-    },<% } %>
-  ];
+    },<% } %><% columns.forEach(function(col) { %>{
+      title: '<%= col.title %>',
+      dataIndex: '<%= col.dataIndex %>',<% if (col.valueType && col.valueType !== "input") { %>
+      valueType: '<%= col.valueType %>',<% } %><% if (col.hideInSearch) { %>
+      hideInSearch: true,<% } %>
+    },<% }); %>];
 
   return (<% if(isPageHeader) {%>
     <PageHeaderWrapper><%}%>
@@ -63,11 +66,13 @@ const Index = () => {
 
 export default Index;`;
 
+// 修改 genProTable.ts，添加columns处理
 export function generateProTable(config: ProTableConfig): string {
   const compiled = template(baseTemplate);
   return compiled({
     isSort: config.isSort ?? false,
     isPageHeader: config.isPageHeader ?? false,
     isSearch: config.isSearch ?? true,
+    columns: config.columns || [],
   }).trim();
 }
