@@ -20,13 +20,22 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/lib/hooks/use-toast";
 
-// 定义表单 schema
+const pageOptions = [
+  { id: "list", label: "列表页" },
+  { id: "form", label: "新增/编辑页" },
+  { id: "detail", label: "详情页" },
+] as const;
+
+// 修改 schema
 const formSchema = z.object({
-  pages: z.object({
-    list: z.boolean().default(false),
-    detail: z.boolean().default(false),
-    form: z.boolean().default(false),
+  pages: z.array(z.enum(["list", "form", "detail"])),
+  list: z.object({
+    isSort: z.boolean(),
+    isPageHeader: z.boolean(),
+    isSearch: z.boolean(),
   }),
 });
 
@@ -36,16 +45,26 @@ export default function Plus() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      pages: {
-        list: false,
-        detail: false,
-        form: false,
+      pages: ["list", "form"],
+      list: {
+        isSort: false,
+        isPageHeader: false,
+        isSearch: true,
       },
     },
   });
 
+  const pages = form.watch("pages");
+
   function onSubmit(data: FormValues) {
-    console.log(data);
+    const { pages } = data;
+    if (pages.length === 0) {
+      toast({
+        title: "请至少选择一个页面",
+        variant: "destructive",
+      });
+      return;
+    }
   }
 
   return (
@@ -69,61 +88,51 @@ export default function Plus() {
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4"
                 >
-                  <div className="grid gap-4">
+                  <div className="grid gap-4 bg-slate-100 dark:bg-zinc-700 p-4 rounded-lg">
                     <div className="space-y-2">
-                      <h3 className="text-[15px] font-medium">
-                        1、选择需要生成的页面
-                      </h3>
                       <div className="flex flex-wrap gap-4">
-                        <FormField
-                          control={form.control}
-                          name="pages.list"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-2">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                />
-                              </FormControl>
-                              <FormLabel className="!mt-0">列表页</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="pages.detail"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-2">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                />
-                              </FormControl>
-                              <FormLabel className="!mt-0">详情页</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name="pages.form"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-2">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                />
-                              </FormControl>
-                              <FormLabel className="!mt-0">
-                                新增/编辑页
-                              </FormLabel>
-                            </FormItem>
-                          )}
-                        />
+                        {pageOptions.map(({ id, label }) => (
+                          <FormField
+                            key={id}
+                            control={form.control}
+                            name="pages"
+                            render={({ field }) => (
+                              <FormItem className="flex items-center space-x-2">
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(id)}
+                                    onCheckedChange={(checked) => {
+                                      if (checked) {
+                                        field.onChange([...field.value, id]);
+                                      } else {
+                                        field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== id
+                                          )
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="form-label">
+                                  {label}
+                                </FormLabel>
+                              </FormItem>
+                            )}
+                          />
+                        ))}
                       </div>
                     </div>
+                  </div>
+                  {pages.includes("list") && (
+                    <div className="bg-slate-100 dark:bg-zinc-700 p-4 rounded-lg">
+                      <h3 className="text-[15px] font-semibold">
+                        🔍 列表页配置
+                      </h3>
+                    </div>
+                  )}
+                  <div className="flex justify-end">
+                    <Button type="submit">生成模板</Button>
                   </div>
                 </form>
               </Form>
