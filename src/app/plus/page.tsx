@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -22,24 +21,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/hooks/use-toast";
-
-const pageOptions = [
-  { id: "list", label: "列表页" },
-  { id: "form", label: "新增/编辑页" },
-  { id: "detail", label: "详情页" },
-] as const;
-
-// 修改 schema
-const formSchema = z.object({
-  pages: z.array(z.enum(["list", "form", "detail"])),
-  list: z.object({
-    isSort: z.boolean(),
-    isPageHeader: z.boolean(),
-    isSearch: z.boolean(),
-  }),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { ImportDialog } from "@/components/shared/ImportDialog";
+import { generateProTable } from "@/lib/generated/proTable/genProTable";
+import {
+  FormValues,
+  PAGE_OPTIONS,
+  formSchema,
+  ValueTypeValue,
+} from "@/types/plus";
+import { ListConfig } from "@/components/plus/ListConfig";
 
 export default function Plus() {
   const form = useForm<FormValues>({
@@ -50,11 +40,14 @@ export default function Plus() {
         isSort: false,
         isPageHeader: false,
         isSearch: true,
+        searchAPI: "",
+        columns: [],
       },
     },
   });
 
   const pages = form.watch("pages");
+  const [importOpen, setImportOpen] = useState(false);
 
   function onSubmit(data: FormValues) {
     const { pages } = data;
@@ -65,6 +58,26 @@ export default function Plus() {
       });
       return;
     }
+
+    // 确保所有列都有必填字段，并且转换valueType为正确的类型
+    const validColumns = data.list.columns.map((col) => ({
+      title: col.title || "",
+      dataIndex: col.dataIndex || "",
+      hideInSearch: col.hideInSearch,
+      valueType: col.valueType as ValueTypeValue,
+    }));
+
+    // 构造配置
+    const config = {
+      isSort: data.list.isSort,
+      isPageHeader: data.list.isPageHeader,
+      isSearch: data.list.isSearch,
+      searchAPI: data.list.searchAPI,
+      columns: validColumns,
+    };
+
+    console.log(config);
+    console.log(generateProTable(config));
   }
 
   return (
@@ -88,10 +101,10 @@ export default function Plus() {
                   onSubmit={form.handleSubmit(onSubmit)}
                   className="space-y-4"
                 >
-                  <div className="grid gap-4 bg-slate-100 dark:bg-zinc-700 p-4 rounded-lg">
+                  <div className="grid gap-4 bg-slate-100 dark:bg-[#27272a] p-6 rounded-lg">
                     <div className="space-y-2">
                       <div className="flex flex-wrap gap-4">
-                        {pageOptions.map(({ id, label }) => (
+                        {PAGE_OPTIONS.map(({ id, label }) => (
                           <FormField
                             key={id}
                             control={form.control}
@@ -124,13 +137,14 @@ export default function Plus() {
                       </div>
                     </div>
                   </div>
+
                   {pages.includes("list") && (
-                    <div className="bg-slate-100 dark:bg-zinc-700 p-4 rounded-lg">
-                      <h3 className="text-[15px] font-semibold">
-                        🔍 列表页配置
-                      </h3>
-                    </div>
+                    <ListConfig
+                      form={form}
+                      onImportOpen={() => setImportOpen(true)}
+                    />
                   )}
+
                   <div className="flex justify-end">
                     <Button type="submit">生成模板</Button>
                   </div>
@@ -144,6 +158,13 @@ export default function Plus() {
           </Tabs>
         </CardContent>
       </Card>
+      <ImportDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        onImport={(columns) => {
+          form.setValue("list.columns", columns);
+        }}
+      />
     </main>
   );
 }

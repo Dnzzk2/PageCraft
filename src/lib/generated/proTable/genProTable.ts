@@ -1,12 +1,12 @@
 import template from "lodash.template";
-import { ProTableConfig } from "./config";
+import { ProTableConfig } from "@/types/plus";
 
 // 注意这里模板的换行处理
 const baseTemplate = `import React, { useState, useRef } from 'react';
 import ProTable from '@ant-design/pro-table';<%if (isPageHeader) {%>
 import { PageHeaderWrapper } from '@ant-design/pro-layout';<%}%>
 import { handleTableResponse } from '@/utils/utils';
-import { queryPageList } from './service';
+import { <%= searchAPI %> } from './service';
 
 const Index = () => {
   const formRef = useRef();
@@ -46,7 +46,7 @@ const Index = () => {
           };
         }}<% } %>
         request={async (params) => {
-          const res = await queryPageList(params);
+          const res = await <%= searchAPI %>(params);
           return handleTableResponse({ actionRef, res });
         }}
         pagination={{
@@ -73,6 +73,7 @@ export function generateProTable(config: ProTableConfig): string {
     isSort: config.isSort ?? false,
     isPageHeader: config.isPageHeader ?? false,
     isSearch: config.isSearch ?? true,
+    searchAPI: config.searchAPI ?? "queryPageList",
     columns: config.columns || [],
   }).trim();
 }

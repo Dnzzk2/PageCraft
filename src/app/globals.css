@@ -152,8 +152,7 @@
     width: 0;
     height: 0;
   }
-
   .form-label {
-    @apply text-sm font-medium select-none !mt-0;
+    @apply text-sm font-medium select-none !mt-0 text-foreground;
   }
 }
