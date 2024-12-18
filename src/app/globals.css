@@ -155,4 +155,22 @@
   .form-label {
     @apply text-sm font-medium select-none !mt-0 text-foreground;
   }
+
+  textarea::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  textarea::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  textarea::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/50 hover:bg-muted-foreground transition-colors;
+    border-radius: 4px;
+  }
+
+  textarea::-webkit-scrollbar-corner {
+    @apply bg-transparent;
+    display: none !important;
+  }
 }

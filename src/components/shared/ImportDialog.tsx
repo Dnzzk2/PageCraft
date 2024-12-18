@@ -10,7 +10,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "@/lib/hooks/use-toast";
-import { ColumnConfig, ValueTypeValue } from "@/types/plus";
+import { ColumnConfig, ValueTypeValue } from "@/lib/types/plus";
 
 interface ImportDialogProps {
   open: boolean;
@@ -77,7 +77,7 @@ export function ImportDialog({
           placeholder={`username 用户名
 createTime 创建时间
 status 状态`}
-          className="min-h-[200px] font-mono"
+          className="min-h-[200px] font-mono resize-none"
         />
         <DialogFooter>
           <Button onClick={handleImport}>导入配置</Button>
