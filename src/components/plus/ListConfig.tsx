@@ -1,5 +1,5 @@
 import React from "react";
-import { FormValues, VALUE_TYPE_OPTIONS, ValueType } from "@/types/plus";
+import { FormValues, VALUE_TYPE_OPTIONS, ValueType } from "@/lib/types/plus";
 import { UseFormReturn } from "react-hook-form";
 import {
   FormControl,
@@ -10,7 +10,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BadgePlus, InfoIcon, TrashIcon, Upload } from "lucide-react";
+import { BadgePlus, InfoIcon, PlusIcon, TrashIcon, Upload } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -89,21 +89,38 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
       {/* API配置组 */}
       <div className="space-y-4">
         <div className="text-sm text-muted-foreground mb-2">API 配置</div>
-        <FormField
-          control={form.control}
-          name="list.searchAPI"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  {...field}
-                  className="bg-white dark:bg-[#18181b] max-w-lg"
-                  placeholder="请输入查询API，例如: /api/users/list 中的list"
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="list.searchAPI"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="bg-white dark:bg-[#18181b] max-w-lg"
+                    placeholder="请输入查询API，例如: /api/users/list 中的list"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="list.deleteAPI"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    {...field}
+                    className="bg-white dark:bg-[#18181b] max-w-lg"
+                    placeholder="请输入删除API，例如: delete"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
 
       {/* columns配置组 */}
@@ -112,7 +129,7 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
           Columns 配置
           <div className="flex items-center gap-2">
             <Button size="sm" type="button" onClick={onImportOpen}>
-              <Upload className="w-4 h-4" /> 一键导入
+              <Upload className="w-4 h-4 mr-1" /> 一键导入
             </Button>
             <Button
               size="sm"
@@ -130,7 +147,7 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
                 ]);
               }}
             >
-              <BadgePlus className="w-4 h-4" />
+              <PlusIcon className="w-4 h-4 mr-1" />
               新增列
             </Button>
           </div>
@@ -138,10 +155,7 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
 
         <div className="space-y-4">
           {form.watch("list.columns")?.map((_, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-4 gap-4 items-start"
-            >
+            <div key={index} className="grid grid-cols-4 gap-4 items-start">
               <FormField
                 control={form.control}
                 name={`list.columns.${index}.title`}
@@ -177,10 +191,7 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
                 name={`list.columns.${index}.valueType`}
                 render={({ field }) => (
                   <FormItem>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger className="bg-white dark:bg-[#18181b] max-w-lg">
                           <SelectValue placeholder="选择类型" />
@@ -188,10 +199,7 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
                       </FormControl>
                       <SelectContent>
                         {VALUE_TYPE_OPTIONS.map((option) => (
-                          <SelectItem
-                            key={option.value}
-                            value={option.value}
-                          >
+                          <SelectItem key={option.value} value={option.value}>
                             {option.label}
                           </SelectItem>
                         ))}
@@ -212,13 +220,12 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel className="form-label">
-                        隐藏搜索
-                      </FormLabel>
+                      <FormLabel className="form-label">隐藏搜索</FormLabel>
                     </FormItem>
                   )}
                 />
                 <Button
+                  type="button"
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
@@ -239,4 +246,4 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
       </div>
     </div>
   );
-} 
+}

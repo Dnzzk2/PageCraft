@@ -7,11 +7,13 @@ import { CheckIcon, XCircle } from "lucide-react";
 interface CodeBlockProps {
   language: string;
   code: string;
+  customStyle?: React.CSSProperties;
 }
 
 const CodeBlock: React.FC<CodeBlockProps> = ({
   language,
   code,
+  customStyle,
 }) => {
   const { toast } = useToast();
 
@@ -61,6 +63,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({
           fontSize: "12px",
           paddingTop: "24px",
           maxHeight: "200px",
+          ...customStyle,
         }}
       >
         {code}
