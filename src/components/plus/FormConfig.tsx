@@ -29,42 +29,66 @@ export function FormConfig({ form, onImportOpen }: FormConfigProps) {
       <div className="flex items-center gap-2">
         <h3 className="text-[15px] font-semibold">新增/编辑配置</h3>
         <span className="flex items-center gap-1 text-xs text-muted-foreground">
-          <InfoIcon className="w-4 h-4" /> 配置生成表单页模板
+          <InfoIcon className="w-4 h-4" /> 如果有bug，请及时反馈，谢谢
         </span>
       </div>
 
-      {/* 组件类型 */}
-      <div className="space-y-4">
-        <div className="text-sm text-muted-foreground mb-2">组件类型</div>
-        <FormField
-          control={form.control}
-          name="form.componentType"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <RadioGroup
-                  {...field}
-                  className="flex items-center gap-4"
-                  onValueChange={field.onChange}
-                  value={field.value}
-                >
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="modal" id="modal" />
-                    <label className="text-sm" htmlFor="modal">
-                      Modal
-                    </label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <RadioGroupItem value="drawer" id="drawer" />
-                    <label className="text-sm" htmlFor="drawer">
-                      Drawer
-                    </label>
-                  </div>
-                </RadioGroup>
-              </FormControl>
-            </FormItem>
-          )}
-        />
+      <div className="flex items-center gap-4">
+        {/* 组件类型 */}
+        <div className="space-y-4">
+          <div className="text-sm text-muted-foreground mb-2">组件类型</div>
+          <FormField
+            control={form.control}
+            name="form.componentType"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <RadioGroup
+                    {...field}
+                    className="flex items-center gap-4"
+                    onValueChange={field.onChange}
+                    value={field.value}
+                  >
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem value="modal" id="modal" />
+                      <label className="text-sm" htmlFor="modal">
+                        Modal
+                      </label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem value="drawer" id="drawer" />
+                      <label className="text-sm" htmlFor="drawer">
+                        Drawer
+                      </label>
+                    </div>
+                  </RadioGroup>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+        {form.watch("form.componentType") === "drawer" && (
+          <div className="space-y-4">
+            <div className="text-sm text-muted-foreground mb-2">功能开关</div>
+            <div className="flex flex-wrap gap-4">
+              <FormField
+                control={form.control}
+                name="form.isFooter"
+                render={({ field }) => (
+                  <FormItem className="flex items-center space-x-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className="form-label">底部显示按钮</FormLabel>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 组件名称 */}
@@ -79,7 +103,7 @@ export function FormConfig({ form, onImportOpen }: FormConfigProps) {
                 <Input
                   {...field}
                   className="bg-white dark:bg-[#18181b] max-w-lg"
-                  placeholder="请输入组件名称，例如: NewModal，默认为New"
+                  placeholder="请输入组件名称，例如: NewModal，默认为New+类型"
                 />
               </FormControl>
             </FormItem>

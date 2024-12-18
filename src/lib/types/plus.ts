@@ -88,6 +88,7 @@ export const formSchema = z.object({
   form: z.object({
     componentName: z.string(),
     componentType: z.string(),
+    isFooter: z.boolean(),
     addAPI: z.string(),
     editAPI: z.string(),
     detailAPI: z.string(),
