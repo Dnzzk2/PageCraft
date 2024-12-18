@@ -10,10 +10,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Navbar } from "./layout/navbar";
+import { Navbar } from "./navbar";
 import { CodeIcon, LinkIcon, ShellIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { Footer } from "./layout/footer";
+import { Footer } from "./footer";
 
 const sidebarItems = [
   {

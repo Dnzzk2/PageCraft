@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/layout/app-sidebar";
 import { siteMetadata } from "@/lib/script/metadata";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -24,7 +24,7 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <main className="w-full overflow-x-auto">
-              <div className="header-hight flex items-center px-1 bg-white dark:bg-slate-400/10">
+              <div className="fixed w-full z-[9] header-hight flex items-center px-1 bg-white dark:bg-[#18181b]  border-b border-zinc-200 dark:border-zinc-800">
                 <SidebarTrigger />
               </div>
               {children}

@@ -130,7 +130,7 @@
   }
 
   .main-container {
-    @apply h-[calc(100vh-var(--header-height))] overflow-y-auto bg-main p-6 @container;
+    @apply min-h-full bg-main p-6 @container pt-20;
   }
 
   .main-container::-webkit-scrollbar {
@@ -151,5 +151,8 @@
     @apply bg-transparent;
     width: 0;
     height: 0;
+  }
+  .form-label {
+    @apply text-sm font-medium select-none !mt-0 text-foreground;
   }
 }
