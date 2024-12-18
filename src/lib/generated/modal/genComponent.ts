@@ -4,7 +4,7 @@ import { lowerFirstLetter } from "../../utils";
 
 export interface ModalConfig {
   componentName: string;
-  fields: Array<{
+  fields?: Array<{
     name: string;
     label: string;
     fieldType: FormFieldTypeValue;
