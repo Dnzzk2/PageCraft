@@ -59,6 +59,7 @@ export default function Plus() {
         editAPI: "",
         detailAPI: "",
         fields: [],
+        isFooter: false,
       },
       detail: {
         componentName: "",
@@ -129,18 +130,20 @@ export default function Plus() {
         editAPI,
         componentName,
         componentType,
+        isFooter,
       } = formData.form;
 
       if (componentType === "drawer") {
         newGeneratedCode.form = generateDrawerComponent({
-          componentName,
+          componentName: componentName || "NewDrawer",
           fields,
           addAPI,
           editAPI: editAPI || undefined,
+          isFooter: isFooter,
         });
       } else {
         newGeneratedCode.form = generateModalComponent({
-          componentName,
+          componentName: componentName || "NewModal",
           fields,
           addAPI,
           editAPI: editAPI || undefined,
@@ -149,11 +152,12 @@ export default function Plus() {
     }
 
     if (pages.includes("detail")) {
-      const { componentName, componentType, detailAPI, fields } = formData.detail;
+      const { componentName, componentType, detailAPI, fields } =
+        formData.detail;
       newGeneratedCode.detail = generateDetailComponent({
-        componentName,
+        componentName: componentName || "DetailModal",
         componentType: componentType as "modal" | "drawer",
-        detailAPI,
+        detailAPI: detailAPI || "detail",
         fields,
       });
     }
@@ -179,6 +183,10 @@ export default function Plus() {
       }
     }
 
+    if (pages.length === 3) {
+      return "这是一个完整的CRUD页面组合，包含：\n1. 列表页的展示和操作\n2. 表单页的新增和编辑\n3. 详情页的查看\n所有页面都是联动的，可以无缝配合使用。";
+    }
+
     if (pages.includes("list") && pages.includes("form")) {
       return "这是一个基础的增删改查页面组合，包含：\n1. 列表页的展示和操作\n2. 表单页的新增和编辑\n所有页面都是联动的，可以无缝配合使用。";
     }
@@ -190,8 +198,6 @@ export default function Plus() {
     if (pages.includes("form") && pages.includes("detail")) {
       return "这是表单和详情页面的组合，你可以：\n1. 分别配置表单和详情的展示形式\n2. 配置相关API\n3. 自定义字段配置";
     }
-
-    return "这是一个完整的CRUD页面组合，包含：\n1. 列表页的展示和操作\n2. 表单页的新增和编辑\n3. 详情页的查看\n所有页面都是联动的，可以无缝配合使用。";
   };
 
   // 获取代码块的高度
@@ -211,7 +217,11 @@ export default function Plus() {
           <hr />
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full mt-4"
+          >
             <TabsList className="w-full justify-start">
               <TabsTrigger value="config">基础配置</TabsTrigger>
               <TabsTrigger value="preview">代码预览</TabsTrigger>

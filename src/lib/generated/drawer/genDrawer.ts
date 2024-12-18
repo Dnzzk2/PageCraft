@@ -13,6 +13,7 @@ export interface DrawerConfig {
   addAPI?: string;
   editAPI?: string;
   detailAPI?: string;
+  isFooter?: boolean;
 }
 
 const baseTemplate = `import React, { useEffect, useState } from 'react';
@@ -123,22 +124,24 @@ const <%= componentName %> = (props) => {
       destroyOnClose
       title={<%= lowerComponentName %>Type === 'C' ? '新增' : '编辑'}
       open={<%= lowerComponentName %>Open}
-      onClose={on<%= componentName %>Cancel}
+      onClose={on<%= componentName %>Cancel}<% if (isFooter) { %>
       footer={
         <Space style={{ float: 'right' }}>
           <Button onClick={on<%= componentName %>Cancel}>取消</Button>
           <Button
             type="primary"
             loading={loading}
-            onClick={async () => {
+            onClick={async () => {<% if (addAPI || editAPI) { %>
               const values = await form.validateFields();
               await handleSubmit(values);
+              <% } %><% if (!addAPI && !editAPI) { %>
+              on<%= componentName %>Cancel();<% } %>
             }}
           >
             确定
           </Button>
         </Space>
-      }
+      }<% } %>
     >
       <ProForm form={form} submitter={false} layout="horizontal" {...formLayout}>
         {renderContent()}
@@ -150,7 +153,14 @@ const <%= componentName %> = (props) => {
 export default <%= componentName %>;`;
 
 export function generateDrawerComponent(config: DrawerConfig): string {
-  const { componentName, fields = [], addAPI, editAPI, detailAPI } = config;
+  const {
+    componentName,
+    fields = [],
+    addAPI,
+    editAPI,
+    detailAPI,
+    isFooter,
+  } = config;
   const lowerComponentName = lowerFirstLetter(componentName);
 
   const compiled = template(baseTemplate, {
@@ -164,5 +174,6 @@ export function generateDrawerComponent(config: DrawerConfig): string {
     addAPI,
     editAPI,
     detailAPI,
+    isFooter,
   }).trim();
 }

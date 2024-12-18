@@ -128,9 +128,13 @@ const <%= componentName %> = (props) => {
       open={<%= lowerComponentName %>Open}
       onCancel={on<%= componentName %>Cancel}
       okButtonProps={{ loading }}
-      onOk={async () => {
+      okText="确定"
+      cancelText="取消"
+      onClick={async () => {<% if (addAPI || editAPI) { %>
         const values = await form.validateFields();
         await handleSubmit(values);
+        <% } %><% if (!addAPI && !editAPI) { %>
+        on<%= componentName %>Cancel();<% } %>
       }}
     >
       <ProForm form={form} submitter={false} layout="horizontal" {...formLayout}>

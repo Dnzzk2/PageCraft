@@ -59,7 +59,7 @@ const DrawerTemplates = () => {
             className="max-w-[200px]"
             placeholder="输入组件名称"
           />
-          <Label htmlFor="isFooter">是否显示底部</Label>
+          <Label htmlFor="isFooter">是否显示底部按钮</Label>
           <Switch
             id="isFooter"
             checked={isFooter}
