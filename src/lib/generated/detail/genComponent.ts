@@ -6,7 +6,7 @@ export interface DetailConfig {
   componentName: string;
   componentType: "modal" | "drawer";
   detailAPI: string;
-  fields: DetailFieldConfig[];
+  fields?: DetailFieldConfig[];
 }
 
 const modalTemplate = `import React, { useEffect, useState } from 'react';
