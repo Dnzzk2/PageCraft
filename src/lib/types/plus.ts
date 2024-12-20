@@ -27,10 +27,35 @@ export const FormFieldType = {
   DATE: "date",
   DATE_RANGE: "dateRange",
   NUMBER: "number",
+  UPLOAD: "upload",
 } as const;
 
 export type FormFieldTypeValue =
   (typeof FormFieldType)[keyof typeof FormFieldType];
+
+// 上传配置
+export const UploadListType = {
+  TEXT: "text",
+  PICTURE: "picture",
+  PICTURE_CARD: "picture-card",
+} as const;
+
+export type UploadListTypeValue =
+  (typeof UploadListType)[keyof typeof UploadListType];
+
+export const UploadAcceptType = {
+  IMAGE: "image/*",
+  FILE: ".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt",
+} as const;
+
+export type UploadAcceptTypeValue =
+  (typeof UploadAcceptType)[keyof typeof UploadAcceptType];
+
+export interface UploadConfig {
+  listType: UploadListTypeValue;
+  acceptType: UploadAcceptTypeValue;
+  multiple: boolean;
+}
 
 // 列配置
 export interface ColumnConfig {
@@ -103,8 +128,24 @@ export const formSchema = z.object({
           FormFieldType.DATE,
           FormFieldType.DATE_RANGE,
           FormFieldType.NUMBER,
+          FormFieldType.UPLOAD,
         ]),
         required: z.boolean(),
+        uploadConfig: z
+          .object({
+            listType: z
+              .enum([
+                UploadListType.TEXT,
+                UploadListType.PICTURE,
+                UploadListType.PICTURE_CARD,
+              ])
+              .optional(),
+            acceptType: z
+              .enum([UploadAcceptType.IMAGE, UploadAcceptType.FILE])
+              .optional(),
+            multiple: z.boolean().optional(),
+          })
+          .optional(),
       })
     ),
   }),
@@ -144,4 +185,16 @@ export const FORM_FIELD_TYPE_OPTIONS = [
   { value: FormFieldType.TEXTAREA, label: "文本域" },
   { value: FormFieldType.DATE, label: "日期" },
   { value: FormFieldType.DATE_RANGE, label: "日期范围" },
+  { value: FormFieldType.UPLOAD, label: "文件上传" },
+] as const;
+
+export const UPLOAD_LIST_TYPE_OPTIONS = [
+  { value: UploadListType.PICTURE_CARD, label: "图片卡片" },
+  { value: UploadListType.PICTURE, label: "图片列表" },
+  { value: UploadListType.TEXT, label: "文本列表" },
+] as const;
+
+export const UPLOAD_ACCEPT_TYPE_OPTIONS = [
+  { value: UploadAcceptType.IMAGE, label: "图片文件" },
+  { value: UploadAcceptType.FILE, label: "文档文件" },
 ] as const;

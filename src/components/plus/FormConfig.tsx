@@ -2,6 +2,10 @@ import {
   FormValues,
   FORM_FIELD_TYPE_OPTIONS,
   FormFieldType,
+  UPLOAD_LIST_TYPE_OPTIONS,
+  UPLOAD_ACCEPT_TYPE_OPTIONS,
+  UploadListType,
+  UploadAcceptType,
 } from "@/lib/types/plus";
 import { InfoIcon, PlusIcon, TrashIcon, Upload } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
@@ -17,6 +21,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
+import { DraggableFields } from "./config/DraggableFields";
 
 interface FormConfigProps {
   form: UseFormReturn<FormValues>;
@@ -24,6 +29,182 @@ interface FormConfigProps {
 }
 
 export function FormConfig({ form, onImportOpen }: FormConfigProps) {
+  const fields = form.watch("form.fields") || [];
+
+  const renderField = (index: number) => {
+    const fieldType = form.watch(`form.fields.${index}.fieldType`);
+
+    return (
+      <div className="grid grid-cols-4 gap-4 items-start">
+        <FormField
+          control={form.control}
+          name={`form.fields.${index}.label`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  {...field}
+                  className="bg-white dark:bg-[#18181b]"
+                  placeholder="标签名"
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name={`form.fields.${index}.name`}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  {...field}
+                  className="bg-white dark:bg-[#18181b]"
+                  placeholder="字段名"
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name={`form.fields.${index}.fieldType`}
+          render={({ field }) => (
+            <FormItem>
+              <Select value={field.value} onValueChange={field.onChange}>
+                <FormControl>
+                  <SelectTrigger className="bg-white dark:bg-[#18181b]">
+                    <SelectValue placeholder="选择类型" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {FORM_FIELD_TYPE_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
+
+        <div className="flex items-center gap-2">
+          <FormField
+            control={form.control}
+            name={`form.fields.${index}.required`}
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel className="form-label">必填</FormLabel>
+              </FormItem>
+            )}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => {
+              const currentFields = form.getValues("form.fields");
+              form.setValue(
+                "form.fields",
+                currentFields.filter((_, i) => i !== index)
+              );
+            }}
+          >
+            <TrashIcon className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {fieldType === FormFieldType.UPLOAD && (
+          <div className="col-span-4 space-y-4">
+            <div className="grid grid-cols-3 gap-4">
+              <FormField
+                control={form.control}
+                name={`form.fields.${index}.uploadConfig.listType`}
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      value={field.value || UploadListType.PICTURE_CARD}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="bg-white dark:bg-[#18181b]">
+                          <SelectValue placeholder="选择展示类型" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {UPLOAD_LIST_TYPE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`form.fields.${index}.uploadConfig.acceptType`}
+                render={({ field }) => (
+                  <FormItem>
+                    <Select
+                      value={field.value || UploadAcceptType.IMAGE}
+                      onValueChange={field.onChange}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="bg-white dark:bg-[#18181b]">
+                          <SelectValue placeholder="选择文件类型" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {UPLOAD_ACCEPT_TYPE_OPTIONS.map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name={`form.fields.${index}.uploadConfig.multiple`}
+                render={({ field }) => (
+                  <FormItem className="flex flex-col justify-end h-full pb-2">
+                    <div className="flex items-center space-x-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel className="form-label">
+                        允许多文件上传
+                      </FormLabel>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="bg-slate-100 dark:bg-[#27272a] p-6 rounded-lg space-y-6">
       <div className="flex items-center gap-2">
@@ -181,7 +362,6 @@ export function FormConfig({ form, onImportOpen }: FormConfigProps) {
               type="button"
               size="sm"
               onClick={() => {
-                const fields = form.getValues("form.fields") || [];
                 form.setValue("form.fields", [
                   ...fields,
                   {
@@ -199,99 +379,12 @@ export function FormConfig({ form, onImportOpen }: FormConfigProps) {
           </div>
         </div>
 
-        <div className="space-y-4">
-          {form.watch("form.fields")?.map((_, index) => (
-            <div key={index} className="grid grid-cols-4 gap-4 items-start">
-              <FormField
-                control={form.control}
-                name={`form.fields.${index}.name`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="bg-white dark:bg-[#18181b]"
-                        placeholder="字段名"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`form.fields.${index}.label`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="bg-white dark:bg-[#18181b]"
-                        placeholder="标签名"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`form.fields.${index}.fieldType`}
-                render={({ field }) => (
-                  <FormItem>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="bg-white dark:bg-[#18181b]">
-                          <SelectValue placeholder="选择类型" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {FORM_FIELD_TYPE_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex items-center gap-2">
-                <FormField
-                  control={form.control}
-                  name={`form.fields.${index}.required`}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center space-x-2">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormLabel className="form-label">必填</FormLabel>
-                    </FormItem>
-                  )}
-                />
-
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    const fields = form.getValues("form.fields");
-                    form.setValue(
-                      "form.fields",
-                      fields.filter((_, i) => i !== index)
-                    );
-                  }}
-                >
-                  <TrashIcon className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <DraggableFields
+          form={form}
+          fieldPath="form.fields"
+          fields={fields}
+          renderField={renderField}
+        />
       </div>
     </div>
   );
