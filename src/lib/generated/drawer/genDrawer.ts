@@ -9,6 +9,11 @@ export interface DrawerConfig {
     label: string;
     fieldType: FormFieldTypeValue;
     required: boolean;
+    uploadConfig?: {
+      listType?: string;
+      acceptType?: string;
+      multiple?: boolean;
+    };
   }>;
   addAPI?: string;
   editAPI?: string;
@@ -17,21 +22,21 @@ export interface DrawerConfig {
 }
 
 const baseTemplate = `import React, { useEffect, useState } from 'react';
-import { Drawer, Form, message, Spin, Space, Button } from 'antd';
-import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDatePicker, ProFormDateRangePicker, ProFormDigit } from '@ant-design/pro-components';<% if (addAPI || editAPI) { %>
-import { <%= addAPI %><% if (editAPI) { %>, <%= editAPI %><% } %> } from '../service';<% } %><% if (detailAPI) { %>
-import { <%= detailAPI %> } from '../service';<% } %>
-
+import { Drawer, Form, message, Spin, Space, Button } from 'antd';<% if (fields.length > 0) { %>
+import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDatePicker, ProFormDateRangePicker, ProFormDigit } from '@ant-design/pro-components';
+import { UploadFile } from 'xydata-tools';<% } %><% if (addAPI || editAPI || detailAPI) { %>
+import {<%if (addAPI) { %><%= addAPI %><% } %><% if (editAPI) { %>, <%= editAPI %><% } %><% if(detailAPI) { %>, <%= detailAPI %><%}%> } from '../service';<% } %>
+<% if (addAPI || editAPI || fields.length > 0) { %>
 const formLayout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 },
-};
+};<% } %>
 
 const <%= componentName %> = (props) => {
-  const { <%= lowerComponentName %>Open, on<%= componentName %>Cancel, <%= lowerComponentName %>Type, <%= lowerComponentName %>Value, actionRef } = props;
-  const [loading, setLoading] = useState(false);
+  const { <%= lowerComponentName %>Open, on<%= componentName %>Cancel, <% if (addAPI || editAPI || fields.length > 0) { %><%= lowerComponentName %>Type, <% } %><%= lowerComponentName %>Value, <% if (addAPI || editAPI || fields.length > 0) { %>actionRef<% } %> } = props;
+  const [loading, setLoading] = useState(false);<% if (addAPI || editAPI || fields.length > 0) { %>
   const [spinning, setSpinning] = useState(false);
-  const [form] = Form.useForm();<% if (detailAPI) { %>
+  const [form] = Form.useForm();<% } %><% if (detailAPI) { %>
 
   useEffect(() => {
     if (<%= lowerComponentName %>Type === 'C') return;
@@ -58,11 +63,14 @@ const <%= componentName %> = (props) => {
     setLoading(true);
     try {
       let res = {};
+      <% if (addAPI) { %>
       if (<%= lowerComponentName %>Type === 'C') {
         res = await <%= addAPI %>(params);
-      } else {
+      }<% } %><% if (editAPI) { %>
+      else {
         res = await <%= editAPI %>({ ...params, id: <%= lowerComponentName %>Value.id });
       }
+      <% } %>
       if (res.rspCode === '000000') {
         message.success(\`\${<%= lowerComponentName %>Type === 'C' ? '新增成功!' : '编辑成功'}\`);
         on<%= componentName %>Cancel();
@@ -75,7 +83,7 @@ const <%= componentName %> = (props) => {
     } finally {
       setLoading(false);
     }
-  };<% } %>
+  };<% } %><% if (addAPI || editAPI || fields.length > 0) { %>
 
   const renderContent = () => {
     return (
@@ -108,6 +116,19 @@ const <%= componentName %> = (props) => {
           label="<%= field.label %>"
           fieldProps={{ precision: 0 }}<% if (field.required) { %>
           rules={[{ required: true, message: '请输入<%= field.label %>' }]}<% } %>
+        /><% } else if (field.fieldType === "upload") { %>
+        <UploadFile
+          form={form}
+          name="<%= field.name %>"
+          label="<%= field.label %>"
+          listType="<%= field.uploadConfig?.listType || 'picture-card' %>"
+          accept="<%= field.uploadConfig?.acceptType || 'image/*' %>"
+          multiple={<%= field.uploadConfig?.multiple || false %>}
+          checkFile={{
+            maxSize: 1024,
+          }}
+          max={2}<% if (field.required) { %>
+          rules={[{ required: true, message: '请上传<%= field.label %>' }]}<% } %>
         /><% } else { %>
         <ProFormText
           name="<%= field.name %>"
@@ -116,13 +137,13 @@ const <%= componentName %> = (props) => {
         /><% } %><% }); %>
       </Spin>
     );
-  };
+  };<% } %>
 
   return (
     <Drawer
       width={600}
       destroyOnClose
-      title={<%= lowerComponentName %>Type === 'C' ? '新增' : '编辑'}
+      title={<% if (addAPI || editAPI) { %><%= lowerComponentName %>Type === 'C' ? '新增' : '编辑'<% } else { %>'抽屉'<% } %>}
       open={<%= lowerComponentName %>Open}
       onClose={on<%= componentName %>Cancel}<% if (isFooter) { %>
       footer={
@@ -134,18 +155,18 @@ const <%= componentName %> = (props) => {
             onClick={async () => {<% if (addAPI || editAPI) { %>
               const values = await form.validateFields();
               await handleSubmit(values);
-              <% } %><% if (!addAPI && !editAPI) { %>
+              <% } else { %>
               on<%= componentName %>Cancel();<% } %>
             }}
           >
-            确定
+          确定
           </Button>
         </Space>
       }<% } %>
-    >
+    ><% if (addAPI || editAPI || fields.length > 0) { %>
       <ProForm form={form} submitter={false} layout="horizontal" {...formLayout}>
         {renderContent()}
-      </ProForm>
+      </ProForm><% } %>
     </Drawer>
   );
 };

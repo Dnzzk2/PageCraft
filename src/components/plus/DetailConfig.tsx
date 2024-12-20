@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InfoIcon, PlusIcon, TrashIcon, Upload } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { DraggableFields } from "./config/DraggableFields";
 
 interface DetailConfigProps {
   form: UseFormReturn<FormValues>;
@@ -13,6 +14,59 @@ interface DetailConfigProps {
 }
 
 export function DetailConfig({ form, onImportOpen }: DetailConfigProps) {
+  const fields = form.watch("detail.fields") || [];
+
+  const renderField = (index: number) => (
+    <div className="grid grid-cols-3 gap-4 items-start">
+      <FormField
+        control={form.control}
+        name={`detail.fields.${index}.name`}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                {...field}
+                className="bg-white dark:bg-[#18181b]"
+                placeholder="字段名"
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name={`detail.fields.${index}.label`}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                {...field}
+                className="bg-white dark:bg-[#18181b]"
+                placeholder="标签名"
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        onClick={() => {
+          const currentFields = form.getValues("detail.fields");
+          form.setValue(
+            "detail.fields",
+            currentFields.filter((_, i) => i !== index)
+          );
+        }}
+      >
+        <TrashIcon className="w-4 h-4" />
+      </Button>
+    </div>
+  );
+
   return (
     <div className="bg-slate-100 dark:bg-[#27272a] p-6 rounded-lg space-y-6">
       <div className="flex items-center gap-2">
@@ -108,7 +162,6 @@ export function DetailConfig({ form, onImportOpen }: DetailConfigProps) {
               type="button"
               size="sm"
               onClick={() => {
-                const fields = form.getValues("detail.fields") || [];
                 form.setValue("detail.fields", [
                   ...fields,
                   {
@@ -124,58 +177,12 @@ export function DetailConfig({ form, onImportOpen }: DetailConfigProps) {
           </div>
         </div>
 
-        <div className="space-y-4">
-          {form.watch("detail.fields")?.map((_, index) => (
-            <div key={index} className="grid grid-cols-3 gap-4 items-start">
-              <FormField
-                control={form.control}
-                name={`detail.fields.${index}.name`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="bg-white dark:bg-[#18181b]"
-                        placeholder="字段名"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`detail.fields.${index}.label`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="bg-white dark:bg-[#18181b]"
-                        placeholder="标签名"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  const fields = form.getValues("detail.fields");
-                  form.setValue(
-                    "detail.fields",
-                    fields.filter((_, i) => i !== index)
-                  );
-                }}
-              >
-                <TrashIcon className="w-4 h-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
+        <DraggableFields
+          form={form}
+          fieldPath="detail.fields"
+          fields={fields}
+          renderField={renderField}
+        />
       </div>
     </div>
   );

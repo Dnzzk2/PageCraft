@@ -36,7 +36,7 @@ const Index = () => {
     set<%= detailName %>Value(record);
     set<%= detailName %>Open(true);
   };<%}%><%if (showDelete) {%>
-  
+
   // 删除
   const handleDelete = async (params) => {
     try {
@@ -49,7 +49,7 @@ const Index = () => {
       console.log(error);
     }
   };<%}%>
-  
+
   const columns = [<% if (isSort) { %>{
       title: '序号',
       dataIndex: 'index', 
@@ -70,10 +70,7 @@ const Index = () => {
       width: 200,
       hideInSearch: true,
       render: (_, record) => (
-        <Space split={<Divider type="vertical" />} size={0}><%if (showAdd) {%>
-          <Button type="link" onClick={() => to<%= addName %>('C')}>
-            新增
-          </Button><%}%><%if (showEdit) {%>
+        <Space split={<Divider type="vertical" />} size={0}><%if (showEdit) {%>
           <Button type="link" onClick={() => to<%= addName %>('U', record)}>
             编辑
           </Button><%}%><%if (showDetail) {%>
@@ -130,8 +127,8 @@ const Index = () => {
           validateTrigger: ['onBlur', 'onChange'],
         }}
       /><% if(isPageHeader) {%>
-    </PageHeaderWrapper><%}%><%if (showAdd) {%>
-    
+    </PageHeaderWrapper><%}%>
+    <%if (showAdd) {%>
     {<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open && (
       <<%= addName %>
         modalOpen={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open}
@@ -141,7 +138,6 @@ const Index = () => {
         actionRef={actionRef}
       />
     )}<%}%><%if (showDetail) {%>
-    
     {<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open && (
       <<%= detailName %>
         modalOpen={<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open}
@@ -156,6 +152,7 @@ export default Index;`;
 
 export function generateProTable(config: ProTableConfig): string {
   const compiled = template(baseTemplate);
+
   const {
     isSort,
     isPageHeader,
@@ -170,6 +167,7 @@ export function generateProTable(config: ProTableConfig): string {
     showDelete,
     deleteAPI,
   } = config;
+
   return compiled({
     isSort: isSort ?? false,
     isPageHeader: isPageHeader ?? false,
@@ -182,6 +180,6 @@ export function generateProTable(config: ProTableConfig): string {
     showDetail: showDetail ?? false,
     detailName: detailName || "DetailModal",
     showDelete: showDelete ?? false,
-    deleteAPI: deleteAPI ?? "delete",
+    deleteAPI: deleteAPI || "delete",
   }).trim();
 }

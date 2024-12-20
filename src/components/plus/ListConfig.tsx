@@ -10,7 +10,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { BadgePlus, InfoIcon, PlusIcon, TrashIcon, Upload } from "lucide-react";
+import { InfoIcon, PlusIcon, TrashIcon, Upload } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DraggableFields } from "./config/DraggableFields";
 
 interface ListConfigProps {
   form: UseFormReturn<FormValues>;
@@ -25,6 +26,97 @@ interface ListConfigProps {
 }
 
 export function ListConfig({ form, onImportOpen }: ListConfigProps) {
+  const columns = form.watch("list.columns") || [];
+
+  const renderField = (index: number) => (
+    <div className="grid grid-cols-4 gap-4 items-start">
+      <FormField
+        control={form.control}
+        name={`list.columns.${index}.title`}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                {...field}
+                placeholder="列标题"
+                className="bg-white dark:bg-[#18181b] max-w-lg"
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name={`list.columns.${index}.dataIndex`}
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                {...field}
+                placeholder="字段名"
+                className="bg-white dark:bg-[#18181b] max-w-lg"
+              />
+            </FormControl>
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name={`list.columns.${index}.valueType`}
+        render={({ field }) => (
+          <FormItem>
+            <Select value={field.value} onValueChange={field.onChange}>
+              <FormControl>
+                <SelectTrigger className="bg-white dark:bg-[#18181b] max-w-lg">
+                  <SelectValue placeholder="选择类型" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {VALUE_TYPE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormItem>
+        )}
+      />
+      <div className="flex items-center gap-2">
+        <FormField
+          control={form.control}
+          name={`list.columns.${index}.hideInSearch`}
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel className="form-label">隐藏搜索</FormLabel>
+            </FormItem>
+          )}
+        />
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+          onClick={() => {
+            const currentColumns = form.getValues("list.columns");
+            form.setValue(
+              "list.columns",
+              currentColumns.filter((_, i) => i !== index)
+            );
+          }}
+        >
+          <TrashIcon className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="bg-slate-100 dark:bg-[#27272a] p-6 rounded-lg space-y-6">
       <div className="flex items-center gap-2">
@@ -135,7 +227,6 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
               size="sm"
               type="button"
               onClick={() => {
-                const columns = form.getValues("list.columns");
                 form.setValue("list.columns", [
                   ...columns,
                   {
@@ -153,96 +244,12 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
           </div>
         </div>
 
-        <div className="space-y-4">
-          {form.watch("list.columns")?.map((_, index) => (
-            <div key={index} className="grid grid-cols-4 gap-4 items-start">
-              <FormField
-                control={form.control}
-                name={`list.columns.${index}.title`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="列标题"
-                        className="bg-white dark:bg-[#18181b] max-w-lg"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`list.columns.${index}.dataIndex`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="字段名"
-                        className="bg-white dark:bg-[#18181b] max-w-lg"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`list.columns.${index}.valueType`}
-                render={({ field }) => (
-                  <FormItem>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="bg-white dark:bg-[#18181b] max-w-lg">
-                          <SelectValue placeholder="选择类型" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {VALUE_TYPE_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              <div className="flex items-center gap-2">
-                <FormField
-                  control={form.control}
-                  name={`list.columns.${index}.hideInSearch`}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center space-x-2">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormLabel className="form-label">隐藏搜索</FormLabel>
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8"
-                  onClick={() => {
-                    const columns = form.getValues("list.columns");
-                    form.setValue(
-                      "list.columns",
-                      columns.filter((_, i) => i !== index)
-                    );
-                  }}
-                >
-                  <TrashIcon className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <DraggableFields
+          form={form}
+          fieldPath="list.columns"
+          fields={columns}
+          renderField={renderField}
+        />
       </div>
     </div>
   );
