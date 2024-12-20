@@ -25,7 +25,7 @@ const baseTemplate = `import React, { useEffect, useState } from 'react';
 import { Drawer, Form, message, Spin, Space, Button } from 'antd';<% if (fields.length > 0) { %>
 import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormDatePicker, ProFormDateRangePicker, ProFormDigit } from '@ant-design/pro-components';
 import { UploadFile } from 'xydata-tools';<% } %><% if (addAPI || editAPI || detailAPI) { %>
-import {<%if (addAPI) { %><%= addAPI %><% } %><% if (editAPI) { %>, <%= editAPI %><% } %><% if(detailAPI) { %>, <%= detailAPI %><%}%> } from '../service';<% } %>
+import {<%if (addAPI) { %><%= addAPI %><% } %><% if (editAPI) { %>, <%= editAPI %><% } %><% if(detailAPI) { %>, <%= detailAPI %><% } %> } from '../service';<% } %>
 <% if (addAPI || editAPI || fields.length > 0) { %>
 const formLayout = {
   labelCol: { span: 4 },
@@ -92,7 +92,7 @@ const <%= componentName %> = (props) => {
           name="<%= field.name %>"
           label="<%= field.label %>"
           fieldProps={{ autoSize: { minRows: 4, maxRows: 10 }, maxLength: 200, showCount: true }}
-          rules={[{ whitespace: true }<% if (field.required) { %>,{ required: true, message: '请输入<%= field.label %>' }<% } %>]}
+          rules={[{ whitespace: true }, { required: true, message: '请输入<%= field.label %>' }]}
         /><% } else if (field.fieldType === "select") { %>
         <ProFormSelect
           name="<%= field.name %>"
@@ -132,7 +132,7 @@ const <%= componentName %> = (props) => {
         /><% } else { %>
         <ProFormText
           name="<%= field.name %>"
-          label="<%= field.label %>"<% if (field.required) { %>
+          label="<%= field.label %>"
           rules={[{ whitespace: true }<% if (field.required) { %>,{ required: true, message: '请输入<%= field.label %>' }<% } %>]}
         /><% } %><% }); %>
       </Spin>
