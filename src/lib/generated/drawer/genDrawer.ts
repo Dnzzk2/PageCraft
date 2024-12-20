@@ -91,8 +91,8 @@ const <%= componentName %> = (props) => {
         <ProFormTextArea
           name="<%= field.name %>"
           label="<%= field.label %>"
-          fieldProps={{ autoSize: { minRows: 4, maxRows: 10 }, maxLength: 200, showCount: true }}<% if (field.required) { %>
-          rules={[{ required: true, message: '请输入<%= field.label %>' }]}<% } %>
+          fieldProps={{ autoSize: { minRows: 4, maxRows: 10 }, maxLength: 200, showCount: true }}
+          rules={[{ whitespace: true }<% if (field.required) { %>,{ required: true, message: '请输入<%= field.label %>' }<% } %>]}
         /><% } else if (field.fieldType === "select") { %>
         <ProFormSelect
           name="<%= field.name %>"
@@ -133,7 +133,7 @@ const <%= componentName %> = (props) => {
         <ProFormText
           name="<%= field.name %>"
           label="<%= field.label %>"<% if (field.required) { %>
-          rules={[{ required: true, message: '请输入<%= field.label %>' }]}<% } %>
+          rules={[{ whitespace: true }<% if (field.required) { %>,{ required: true, message: '请输入<%= field.label %>' }<% } %>]}
         /><% } %><% }); %>
       </Spin>
     );

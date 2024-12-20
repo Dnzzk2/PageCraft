@@ -12,7 +12,9 @@ interface SortableFieldProps {
 
 export function SortableField({ id, children }: SortableFieldProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useSortable({ id });
+    useSortable({
+      id,
+    });
 
   const style = transform
     ? {

@@ -16,7 +16,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/hooks/use-toast";
 import { ImportDialog } from "@/components/shared/ImportDialog";
 import { generateProTable } from "@/lib/generated/proTable/genProTable";
-import { FormValues, formSchema, FormFieldType } from "@/lib/types/plus";
+import {
+  FormValues,
+  formSchema,
+  FormFieldType,
+  FormFieldTypeValue,
+} from "@/lib/types/plus";
 import { ListConfig } from "@/components/plus/ListConfig";
 import { FormConfig } from "@/components/plus/FormConfig";
 import { cloneDeep } from "lodash";
@@ -26,6 +31,13 @@ import { DetailConfig } from "@/components/plus/DetailConfig";
 import { generateDetailComponent } from "@/lib/generated/detail/genComponent";
 import { PageSelector } from "@/components/plus/config/PageSelector";
 import { CodePreview } from "@/components/plus/preview/CodePreview";
+
+interface ImportColumn {
+  dataIndex: string;
+  title: string;
+  valueType?: "date" | "input" | "select" | "dateRange";
+  hideInSearch?: boolean;
+}
 
 export default function Plus() {
   const form = useForm<FormValues>({
@@ -101,25 +113,34 @@ export default function Plus() {
     }
 
     if (data.pages.includes("form")) {
-      const { fields, addAPI, editAPI, componentName, componentType, isFooter } = formData.form;
-      newGeneratedCode.form = componentType === "drawer"
-        ? generateDrawerComponent({
-            componentName: componentName || "NewDrawer",
-            fields,
-            addAPI,
-            editAPI: editAPI || undefined,
-            isFooter,
-          })
-        : generateModalComponent({
-            componentName: componentName || "NewModal",
-            fields,
-            addAPI,
-            editAPI: editAPI || undefined,
-          });
+      const {
+        fields,
+        addAPI,
+        editAPI,
+        componentName,
+        componentType,
+        isFooter,
+      } = formData.form;
+      newGeneratedCode.form =
+        componentType === "drawer"
+          ? generateDrawerComponent({
+              componentName: componentName || "NewDrawer",
+              fields,
+              addAPI,
+              editAPI: editAPI || undefined,
+              isFooter,
+            })
+          : generateModalComponent({
+              componentName: componentName || "NewModal",
+              fields,
+              addAPI,
+              editAPI: editAPI || undefined,
+            });
     }
 
     if (data.pages.includes("detail")) {
-      const { componentName, componentType, detailAPI, fields } = formData.detail;
+      const { componentName, componentType, detailAPI, fields } =
+        formData.detail;
       newGeneratedCode.detail = generateDetailComponent({
         componentName: componentName || "DetailModal",
         componentType: componentType as "modal" | "drawer",
@@ -132,26 +153,43 @@ export default function Plus() {
     setActiveTab("preview");
   }
 
-  const handleImport = (columns: any[], type: "list" | "form" | "detail") => {
+  const handleImport = (
+    columns: ImportColumn[],
+    type: "list" | "form" | "detail"
+  ) => {
+    if (!Array.isArray(columns) || columns.length === 0) {
+      toast({
+        title: "导入数据格式不正确",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (type === "list") {
       form.setValue("list.columns", columns);
     } else {
       const fields = columns.map((col) => ({
-        name: col.dataIndex,
-        label: col.title,
+        name: col.dataIndex || "",
+        label: col.title || "",
         ...(type === "form" && {
-          fieldType:
-            col.valueType === "dateRange"
-              ? FormFieldType.DATE_RANGE
-              : col.valueType === "date"
-              ? FormFieldType.DATE
-              : col.valueType === "select"
-              ? FormFieldType.SELECT
-              : FormFieldType.INPUT,
+          fieldType: getFieldType(col.valueType),
           required: false,
         }),
       }));
       form.setValue(`${type}.fields`, fields);
+    }
+  };
+
+  const getFieldType = (valueType?: string): FormFieldTypeValue => {
+    switch (valueType) {
+      case "dateRange":
+        return FormFieldType.DATE_RANGE;
+      case "date":
+        return FormFieldType.DATE;
+      case "select":
+        return FormFieldType.SELECT;
+      default:
+        return FormFieldType.INPUT;
     }
   };
 
@@ -164,7 +202,11 @@ export default function Plus() {
           <hr />
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full mt-4"
+          >
             <TabsList className="w-full justify-start">
               <TabsTrigger value="config">基础配置</TabsTrigger>
               <TabsTrigger value="preview">代码预览</TabsTrigger>
@@ -172,7 +214,10 @@ export default function Plus() {
 
             <TabsContent value="config" className="mt-4 space-y-4">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
                   <PageSelector form={form} />
 
                   {pages.includes("list") && (
