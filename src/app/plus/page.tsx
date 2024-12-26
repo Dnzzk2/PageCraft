@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -31,13 +31,7 @@ import { DetailConfig } from "@/components/plus/DetailConfig";
 import { generateDetailComponent } from "@/lib/generated/detail/genComponent";
 import { PageSelector } from "@/components/plus/config/PageSelector";
 import { CodePreview } from "@/components/plus/preview/CodePreview";
-
-interface ImportColumn {
-  dataIndex: string;
-  title: string;
-  valueType?: "date" | "input" | "select" | "dateRange";
-  hideInSearch?: boolean;
-}
+import { debounce } from "lodash";
 
 export default function Plus() {
   const form = useForm<FormValues>({
@@ -81,7 +75,7 @@ export default function Plus() {
     detail?: string;
   }>({});
 
-  function onSubmit(data: FormValues) {
+  const onSubmit = useCallback((data: FormValues) => {
     if (data.pages.length === 0) {
       toast({
         title: "请至少选择一个页面",
@@ -90,108 +84,101 @@ export default function Plus() {
       return;
     }
 
-    const formData = cloneDeep(data);
-    const newGeneratedCode: typeof generatedCode = {};
+    requestAnimationFrame(() => {
+      const formData = cloneDeep(data);
+      const newGeneratedCode: typeof generatedCode = {};
 
-    if (data.pages.includes("list")) {
-      const validColumns = data.list.columns.map((col) => ({
-        title: col.title || "",
-        dataIndex: col.dataIndex || "",
-        hideInSearch: col.hideInSearch,
-        valueType: col.valueType,
-      }));
+      Promise.resolve().then(() => {
+        if (data.pages.includes("list")) {
+          const validColumns = data.list.columns.map((col) => ({
+            title: col.title || "",
+            dataIndex: col.dataIndex || "",
+            hideInSearch: col.hideInSearch,
+            valueType: col.valueType,
+          }));
 
-      formData.list.columns = validColumns;
-      formData.list.showAdd = data.pages.includes("form");
-      formData.list.addName = formData.form.componentName;
-      formData.list.showEdit = !!formData.form.editAPI;
-      formData.list.showDetail = data.pages.includes("detail");
-      formData.list.detailName = formData.detail.componentName;
-      formData.list.showDelete = !!formData.list.deleteAPI;
+          formData.list.columns = validColumns;
+          formData.list.showAdd = data.pages.includes("form");
+          formData.list.addName = formData.form.componentName;
+          formData.list.showEdit = !!formData.form.editAPI;
+          formData.list.showDetail = data.pages.includes("detail");
+          formData.list.detailName = formData.detail.componentName;
+          formData.list.showDelete = !!formData.list.deleteAPI;
 
-      newGeneratedCode.list = generateProTable(formData.list);
-    }
+          newGeneratedCode.list = generateProTable(formData.list);
+        }
 
-    if (data.pages.includes("form")) {
-      const {
-        fields,
-        addAPI,
-        editAPI,
-        componentName,
-        componentType,
-        isFooter,
-      } = formData.form;
-      newGeneratedCode.form =
-        componentType === "drawer"
-          ? generateDrawerComponent({
-              componentName: componentName || "NewDrawer",
-              fields,
-              addAPI,
-              editAPI: editAPI || undefined,
-              isFooter,
-            })
-          : generateModalComponent({
-              componentName: componentName || "NewModal",
-              fields,
-              addAPI,
-              editAPI: editAPI || undefined,
-            });
-    }
+        if (data.pages.includes("form")) {
+          const {
+            fields,
+            addAPI,
+            editAPI,
+            componentName,
+            componentType,
+            isFooter,
+            detailAPI,
+          } = formData.form;
+          newGeneratedCode.form =
+            componentType === "drawer"
+              ? generateDrawerComponent({
+                  componentName: componentName || "NewDrawer",
+                  fields,
+                  addAPI,
+                  editAPI: editAPI || undefined,
+                  isFooter,
+                  detailAPI,
+                })
+              : generateModalComponent({
+                  componentName: componentName || "NewModal",
+                  fields,
+                  addAPI,
+                  editAPI: editAPI || undefined,
+                  detailAPI,
+                });
+        }
 
-    if (data.pages.includes("detail")) {
-      const { componentName, componentType, detailAPI, fields } =
-        formData.detail;
-      newGeneratedCode.detail = generateDetailComponent({
-        componentName: componentName || "DetailModal",
-        componentType: componentType as "modal" | "drawer",
-        detailAPI: detailAPI || "detail",
-        fields,
+        if (data.pages.includes("detail")) {
+          const { componentName, componentType, detailAPI, fields } =
+            formData.detail;
+          newGeneratedCode.detail = generateDetailComponent({
+            componentName: componentName || "DetailModal",
+            componentType: componentType as "modal" | "drawer",
+            detailAPI: detailAPI || "detail",
+            fields,
+          });
+        }
+
+        setGeneratedCode(newGeneratedCode);
+        setActiveTab("preview");
       });
-    }
+    });
+  }, []);
 
-    setGeneratedCode(newGeneratedCode);
-    setActiveTab("preview");
-  }
-
-  const handleImport = (
-    columns: ImportColumn[],
-    type: "list" | "form" | "detail"
-  ) => {
-    if (!Array.isArray(columns) || columns.length === 0) {
-      toast({
-        title: "导入数据格式不正确",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (type === "list") {
-      form.setValue("list.columns", columns);
-    } else {
-      const fields = columns.map((col) => ({
-        name: col.dataIndex || "",
-        label: col.title || "",
-        ...(type === "form" && {
-          fieldType: getFieldType(col.valueType),
-          required: false,
-        }),
-      }));
-      form.setValue(`${type}.fields`, fields);
-    }
-  };
-
-  const getFieldType = (valueType?: string): FormFieldTypeValue => {
-    switch (valueType) {
-      case "dateRange":
-        return FormFieldType.DATE_RANGE;
-      case "date":
-        return FormFieldType.DATE;
-      case "select":
-        return FormFieldType.SELECT;
-      default:
-        return FormFieldType.INPUT;
-    }
-  };
+  const handleImport = useCallback(
+    debounce((columns: any[], type: "list" | "form" | "detail") => {
+      if (type === "list") {
+        form.setValue("list.columns", columns);
+      } else {
+        const fields = columns.map((col) => ({
+          name: col.dataIndex,
+          label: col.title,
+          ...(type === "form" && {
+            fieldType:
+              col.valueType === "dateRange"
+                ? FormFieldType.DATE_RANGE
+                : col.valueType === "date"
+                ? FormFieldType.DATE
+                : col.valueType === "select"
+                ? FormFieldType.SELECT
+                : FormFieldType.INPUT,
+            required: false,
+          }),
+        }));
+        form.setValue(`${type}.fields`, fields);
+      }
+    }, 300),
+    [form]
+  );
 
   return (
     <main className="main-container">
