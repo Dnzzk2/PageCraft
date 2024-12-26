@@ -14,7 +14,7 @@ import { Modal, Descriptions, Spin } from 'antd';
 import { <%= detailAPI %> } from '../service';
 
 const <%= componentName %> = (props) => {
-  const { <%= lowerComponentName %>Open, on<%= componentName %>Cancel, <%= lowerComponentName %>Value } = props;
+  const { <%= lowerComponentName %>Open, <%= lowerComponentName %>Cancel, <%= lowerComponentName %>Value } = props;
   const [spinning, setSpinning] = useState(false);
   const [detailData, setDetailData] = useState({});
 
@@ -43,7 +43,7 @@ const <%= componentName %> = (props) => {
       destroyOnClose
       title="详情"
       open={<%= lowerComponentName %>Open}
-      onCancel={on<%= componentName %>Cancel}
+      onCancel={<%= lowerComponentName %>Cancel}
       footer={false}
     >
       <Spin spinning={spinning}>
@@ -63,7 +63,7 @@ import { Drawer, Descriptions, Spin } from 'antd';
 import { <%= detailAPI %> } from '../service';
 
 const <%= componentName %> = (props) => {
-  const { <%= lowerComponentName %>Open, on<%= componentName %>Cancel, <%= lowerComponentName %>Value } = props;
+  const { <%= lowerComponentName %>Open, <%= lowerComponentName %>Cancel, <%= lowerComponentName %>Value } = props;
   const [spinning, setSpinning] = useState(false);
   const [detailData, setDetailData] = useState({});
 
@@ -92,7 +92,7 @@ const <%= componentName %> = (props) => {
       destroyOnClose
       title="详情"
       open={<%= lowerComponentName %>Open}
-      onClose={on<%= componentName %>Cancel}
+      onClose={<%= lowerComponentName %>Cancel}
     >
       <Spin spinning={spinning}>
         <Descriptions column={1}>

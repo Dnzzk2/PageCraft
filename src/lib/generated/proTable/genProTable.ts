@@ -91,10 +91,12 @@ const Index = () => {
       ),
     },<%}%>];
 
-  return (<% if(isPageHeader) {%>
-    <PageHeaderWrapper><%}%>
-      <ProTable
-        headerTitle=""
+  return (
+    <>
+      <% if(isPageHeader) {%>
+      <PageHeaderWrapper><%}%>
+        <ProTable
+          headerTitle=""
         toolBarRender={() => [<%if (showAdd) {%>
           <Button type="primary" onClick={() => to<%= addName %>('C')}>
             新增
@@ -106,7 +108,7 @@ const Index = () => {
         rowKey="id"
         defaultSize="small"<% if (!isSearch) { %>
         search={false}<% } else { %>
-        search={{ collapsed: false, collapseRender: false, labelWidth: 'auto' }}
+        search={{labelWidth: 'auto' }}
         beforeSearchSubmit={(params) => {
           return {
             searchObject: params,
@@ -131,20 +133,21 @@ const Index = () => {
     <%if (showAdd) {%>
     {<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open && (
       <<%= addName %>
-        modalOpen={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open}
-        modalCancel={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel}
-        modalType={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type}
-        modalValue={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Value}
+        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open}
+        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel}
+        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type}
+        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Value={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Value}
         actionRef={actionRef}
       />
     )}<%}%><%if (showDetail) {%>
     {<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open && (
       <<%= detailName %>
-        modalOpen={<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open}
-        modalCancel={<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Cancel}
-        modalValue={<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Value}
+        <%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open={<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open}
+        <%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Cancel={<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Cancel}
+        <%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Value={<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Value}
       />
     )}<%}%>
+    </>
   );
 };
 

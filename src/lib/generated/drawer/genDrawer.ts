@@ -33,7 +33,7 @@ const formLayout = {
 };<% } %>
 
 const <%= componentName %> = (props) => {
-  const { <%= lowerComponentName %>Open, on<%= componentName %>Cancel, <% if (addAPI || editAPI || fields.length > 0) { %><%= lowerComponentName %>Type, <% } %><%= lowerComponentName %>Value, <% if (addAPI || editAPI || fields.length > 0) { %>actionRef<% } %> } = props;
+  const { <%= lowerComponentName %>Open, <%= lowerComponentName %>Cancel, <% if (addAPI || editAPI || fields.length > 0) { %><%= lowerComponentName %>Type, <% } %><%= lowerComponentName %>Value, <% if (addAPI || editAPI || fields.length > 0) { %>actionRef<% } %> } = props;
   const [loading, setLoading] = useState(false);<% if (addAPI || editAPI || fields.length > 0) { %>
   const [spinning, setSpinning] = useState(false);
   const [form] = Form.useForm();<% } %><% if (detailAPI) { %>
@@ -145,10 +145,10 @@ const <%= componentName %> = (props) => {
       destroyOnClose
       title={<% if (addAPI || editAPI) { %><%= lowerComponentName %>Type === 'C' ? '新增' : '编辑'<% } else { %>'抽屉'<% } %>}
       open={<%= lowerComponentName %>Open}
-      onClose={on<%= componentName %>Cancel}<% if (isFooter) { %>
+      onClose={<%= lowerComponentName %>Cancel}<% if (isFooter) { %>
       footer={
         <Space style={{ float: 'right' }}>
-          <Button onClick={on<%= componentName %>Cancel}>取消</Button>
+          <Button onClick={<%= lowerComponentName %>Cancel}>取消</Button>
           <Button
             type="primary"
             loading={loading}
@@ -156,7 +156,7 @@ const <%= componentName %> = (props) => {
               const values = await form.validateFields();
               await handleSubmit(values);
               <% } else { %>
-              on<%= componentName %>Cancel();<% } %>
+              <%= lowerComponentName %>Cancel();<% } %>
             }}
           >
           确定
