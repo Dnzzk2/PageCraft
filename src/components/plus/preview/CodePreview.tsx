@@ -6,6 +6,14 @@ import { generateRender } from "@/lib/generated/common/genRender";
 import { generateState } from "@/lib/generated/common/genState";
 import { UseFormReturn } from "react-hook-form";
 
+const getComponentName = (
+  type: "form" | "detail",
+  form: UseFormReturn<any>
+) => {
+  const defaultName = type === "form" ? "NewForm" : "DetailModal";
+  return form.watch(`${type}.componentName`) || defaultName;
+};
+
 interface CodePreviewProps {
   form: UseFormReturn<any>;
   pages: string[];
@@ -74,10 +82,7 @@ export function CodePreview({ form, pages, generatedCode }: CodePreviewProps) {
               <CodeBlock
                 language="jsx"
                 code={generateImport({
-                  componentName:
-                    type === "form"
-                      ? form.watch("form.componentName") || "NewForm"
-                      : form.watch("detail.componentName") || "DetailModal",
+                  componentName: getComponentName(type, form),
                 })}
               />
             </div>
@@ -87,10 +92,7 @@ export function CodePreview({ form, pages, generatedCode }: CodePreviewProps) {
               <CodeBlock
                 language="jsx"
                 code={generateState({
-                  componentName:
-                    type === "form"
-                      ? form.watch("form.componentName") || "NewForm"
-                      : form.watch("detail.componentName") || "DetailModal",
+                  componentName: getComponentName(type, form),
                   isForm: type === "form",
                 })}
               />
@@ -101,10 +103,7 @@ export function CodePreview({ form, pages, generatedCode }: CodePreviewProps) {
               <CodeBlock
                 language="jsx"
                 code={generateRender({
-                  componentName:
-                    type === "form"
-                      ? form.watch("form.componentName") || "NewForm"
-                      : form.watch("detail.componentName") || "DetailModal",
+                  componentName: getComponentName(type, form),
                   isForm: type === "form",
                 })}
               />
@@ -114,7 +113,9 @@ export function CodePreview({ form, pages, generatedCode }: CodePreviewProps) {
               <h3 className="text-base font-semibold mb-1">4. 组件代码</h3>
               <CodeBlock
                 language="jsx"
-                code={type === "form" ? generatedCode.form : generatedCode.detail}
+                code={
+                  type === "form" ? generatedCode.form : generatedCode.detail
+                }
                 customStyle={{ maxHeight: getCodeBlockHeight() }}
               />
             </div>
@@ -122,4 +123,4 @@ export function CodePreview({ form, pages, generatedCode }: CodePreviewProps) {
         ))}
     </>
   );
-} 
+}

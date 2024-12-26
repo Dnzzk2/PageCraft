@@ -17,6 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableField } from "./SortableField";
 import { UseFormReturn } from "react-hook-form";
+import { useCallback } from "react";
 
 interface DraggableFieldsProps {
   form: UseFormReturn<any>;
@@ -31,8 +32,7 @@ export function DraggableFields({
   fieldPath,
   renderField,
   fields,
-  getFieldId = (field, index) =>
-    field?.name ? `${field.name}-${fieldPath}` : `${index}-${fieldPath}`,
+  getFieldId = (field, index) => `field-${index}-${fieldPath}`,
 }: DraggableFieldsProps) {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -41,7 +41,7 @@ export function DraggableFields({
     })
   );
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
@@ -49,7 +49,7 @@ export function DraggableFields({
       const newIndex = parseInt((over.id as string).split('-')[1]);
       form.setValue(fieldPath, arrayMove(fields, oldIndex, newIndex));
     }
-  };
+  }, [form, fieldPath, fields]);
 
   return (
     <DndContext
@@ -61,7 +61,11 @@ export function DraggableFields({
         items={fields.map((_, index) => `field-${index}`)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="space-y-4">
+        <div 
+          className="space-y-4"
+          role="list"
+          aria-label="可排序字段列表"
+        >
           {fields.map((field, index) => (
             <SortableField 
               key={`field-${index}`} 

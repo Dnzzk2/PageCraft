@@ -16,7 +16,12 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/lib/hooks/use-toast";
 import { ImportDialog } from "@/components/shared/ImportDialog";
 import { generateProTable } from "@/lib/generated/proTable/genProTable";
-import { FormValues, formSchema, FormFieldType } from "@/lib/types/plus";
+import {
+  FormValues,
+  formSchema,
+  FormFieldType,
+  FormFieldTypeValue,
+} from "@/lib/types/plus";
 import { ListConfig } from "@/components/plus/ListConfig";
 import { FormConfig } from "@/components/plus/FormConfig";
 import { cloneDeep } from "lodash";
@@ -104,27 +109,37 @@ export default function Plus() {
         }
 
         if (data.pages.includes("form")) {
-          const { fields, addAPI, editAPI, componentName, componentType, isFooter, detailAPI } = formData.form;
-          newGeneratedCode.form = componentType === "drawer"
-            ? generateDrawerComponent({
-                componentName: componentName || "NewDrawer",
-                fields,
-                addAPI,
-                editAPI: editAPI || undefined,
-                isFooter,
-                detailAPI,
-              })
-            : generateModalComponent({
-                componentName: componentName || "NewModal",
-                fields,
-                addAPI,
-                editAPI: editAPI || undefined,
-                detailAPI,
-              });
+          const {
+            fields,
+            addAPI,
+            editAPI,
+            componentName,
+            componentType,
+            isFooter,
+            detailAPI,
+          } = formData.form;
+          newGeneratedCode.form =
+            componentType === "drawer"
+              ? generateDrawerComponent({
+                  componentName: componentName || "NewDrawer",
+                  fields,
+                  addAPI,
+                  editAPI: editAPI || undefined,
+                  isFooter,
+                  detailAPI,
+                })
+              : generateModalComponent({
+                  componentName: componentName || "NewModal",
+                  fields,
+                  addAPI,
+                  editAPI: editAPI || undefined,
+                  detailAPI,
+                });
         }
 
         if (data.pages.includes("detail")) {
-          const { componentName, componentType, detailAPI, fields } = formData.detail;
+          const { componentName, componentType, detailAPI, fields } =
+            formData.detail;
           newGeneratedCode.detail = generateDetailComponent({
             componentName: componentName || "DetailModal",
             componentType: componentType as "modal" | "drawer",
@@ -174,7 +189,11 @@ export default function Plus() {
           <hr />
         </CardHeader>
         <CardContent>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full mt-4"
+          >
             <TabsList className="w-full justify-start">
               <TabsTrigger value="config">基础配置</TabsTrigger>
               <TabsTrigger value="preview">代码预览</TabsTrigger>
@@ -182,7 +201,10 @@ export default function Plus() {
 
             <TabsContent value="config" className="mt-4 space-y-4">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-4"
+                >
                   <PageSelector form={form} />
 
                   {pages.includes("list") && (

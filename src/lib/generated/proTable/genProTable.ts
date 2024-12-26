@@ -108,7 +108,7 @@ const Index = () => {
         rowKey="id"
         defaultSize="small"<% if (!isSearch) { %>
         search={false}<% } else { %>
-        search={{labelWidth: 'auto' }}
+        search={{ labelWidth: 'auto' }}
         beforeSearchSubmit={(params) => {
           return {
             searchObject: params,
@@ -119,7 +119,8 @@ const Index = () => {
           return handleTableResponse({ actionRef, res });
         }}
         pagination={{
-          defaultPageSize: 10,<% if (isSort) { %>
+          defaultPageSize: 10,
+          showSizeChanger: true,<% if (isSort) { %>
           onChange: (current, pageSize) => {
             setPageInfo({ current, pageSize });
           },<% } %>
