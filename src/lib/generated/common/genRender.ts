@@ -5,7 +5,7 @@ import { lowerFirstLetter } from "../../utils";
 const renderTemplate = `{<%= baseName %>Open && (
   <<%= componentName %>
     <%= baseName %>Open={<%= baseName %>Open}
-    on<%= componentName %>Cancel={<%= baseName %>Cancel}
+    <%= baseName %>Cancel={<%= baseName %>Cancel}
     <%= baseName %>Value={<%= baseName %>Value}<% if (isForm) { %>
     <%= baseName %>Type={<%= baseName %>Type}<% } %>
   />

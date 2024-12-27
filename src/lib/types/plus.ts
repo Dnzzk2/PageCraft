@@ -79,6 +79,9 @@ export interface ProTableConfig {
   detailName?: string;
   showDelete?: boolean;
   deleteAPI?: string;
+  formLength?: number;
+  editAPI?: boolean;
+  addAPI?: boolean;
 }
 
 // 详情字段配置
