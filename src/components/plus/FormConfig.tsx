@@ -209,9 +209,6 @@ export function FormConfig({ form, onImportOpen }: FormConfigProps) {
     <div className="bg-slate-100 dark:bg-[#27272a] p-6 rounded-lg space-y-6">
       <div className="flex items-center gap-2">
         <h3 className="text-[15px] font-semibold">新增/编辑配置</h3>
-        <span className="flex items-center gap-1 text-xs text-muted-foreground">
-          <InfoIcon className="w-4 h-4" /> 如果有bug，请及时反馈，谢谢
-        </span>
       </div>
 
       <div className="flex items-center gap-4">

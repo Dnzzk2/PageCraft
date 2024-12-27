@@ -31,7 +31,6 @@ import { DetailConfig } from "@/components/plus/DetailConfig";
 import { generateDetailComponent } from "@/lib/generated/detail/genComponent";
 import { PageSelector } from "@/components/plus/config/PageSelector";
 import { CodePreview } from "@/components/plus/preview/CodePreview";
-import { debounce } from "lodash";
 
 export default function Plus() {
   const form = useForm<FormValues>({
@@ -104,6 +103,9 @@ export default function Plus() {
           formData.list.showDetail = data.pages.includes("detail");
           formData.list.detailName = formData.detail.componentName;
           formData.list.showDelete = !!formData.list.deleteAPI;
+          formData.list.editAPI = formData.form.editAPI || false;
+          formData.list.addAPI = formData.form.addAPI || false;
+          formData.list.formLength = formData.form.fields.length || 0;
 
           newGeneratedCode.list = generateProTable(formData.list);
         }
@@ -155,28 +157,49 @@ export default function Plus() {
   }, []);
 
   const handleImport = useCallback(
-    debounce((columns: any[], type: "list" | "form" | "detail") => {
-      if (type === "list") {
-        form.setValue("list.columns", columns);
-      } else {
-        const fields = columns.map((col) => ({
-          name: col.dataIndex,
-          label: col.title,
-          ...(type === "form" && {
-            fieldType:
-              col.valueType === "dateRange"
-                ? FormFieldType.DATE_RANGE
-                : col.valueType === "date"
-                ? FormFieldType.DATE
-                : col.valueType === "select"
-                ? FormFieldType.SELECT
-                : FormFieldType.INPUT,
-            required: false,
-          }),
-        }));
-        form.setValue(`${type}.fields`, fields);
+    (columns: any[], type: "list" | "form" | "detail") => {
+      try {
+        if (type === "list") {
+          form.setValue("list.columns", columns, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        } else {
+          const fields = columns.map((col) => ({
+            name: col.dataIndex,
+            label: col.title,
+            ...(type === "form" && {
+              fieldType:
+                col.valueType === "dateRange"
+                  ? FormFieldType.DATE_RANGE
+                  : col.valueType === "date"
+                  ? FormFieldType.DATE
+                  : col.valueType === "select"
+                  ? FormFieldType.SELECT
+                  : FormFieldType.INPUT,
+              required: false,
+            }),
+          }));
+          form.setValue(`${type}.fields`, fields, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        }
+
+        // 导入成功提示
+        toast({
+          title: "导入成功",
+          variant: "default",
+        });
+      } catch (error) {
+        console.error("Import error:", error);
+        toast({
+          title: "导入失败",
+          description: "请检查数据格式是否正确",
+          variant: "destructive",
+        });
       }
-    }, 300),
+    },
     [form]
   );
 

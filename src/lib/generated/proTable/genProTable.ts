@@ -13,8 +13,7 @@ import <%= detailName %> from './components/<%= detailName %>';<%}%>
 const Index = () => {
   const formRef = useRef();
   const actionRef = useRef();<% if (isSort) { %>
-  const [pageInfo, setPageInfo] = useState({ current: 1, pageSize: 10 });<% } %><%if (showAdd) {%>
-  const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type, set<%= addName %>Type] = useState('C');
+  const [pageInfo, setPageInfo] = useState({ current: 1, pageSize: 10 });<% } %><%if (showAdd) {%><% if (formLength > 0 || editAPI || addAPI) { %>const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type, set<%= addName %>Type] = useState('C');<% } %>
   const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open, set<%= addName %>Open] = useState(false);
   const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Value, set<%= addName %>Value] = useState({});<%}%><%if (showDetail) {%>
   const [<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open, set<%= detailName %>Open] = useState(false);
@@ -24,8 +23,7 @@ const Index = () => {
   const <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel = () => {
     set<%= addName %>Open(false);
   };
-  const to<%= addName %> = (type, record = {}) => {
-    set<%= addName %>Type(type);
+  const to<%= addName %> = (<% if (formLength > 0 || editAPI || addAPI) { %>type, <% } %>record = {}) => {<% if (formLength > 0 || editAPI || addAPI) { %>set<%= addName %>Type(type);<% } %>
     set<%= addName %>Value(record);
     set<%= addName %>Open(true);
   };<%}%><%if (showDetail) {%>
@@ -92,13 +90,12 @@ const Index = () => {
     },<%}%>];
 
   return (
-    <>
-      <% if(isPageHeader) {%>
+    <><% if(isPageHeader) {%>
       <PageHeaderWrapper><%}%>
         <ProTable
-          headerTitle=""
+        headerTitle=""
         toolBarRender={() => [<%if (showAdd) {%>
-          <Button type="primary" onClick={() => to<%= addName %>('C')}>
+          <Button type="primary" onClick={() => to<%= addName %>(<% if (formLength > 0 || editAPI || addAPI) { %> 'C' <% } %>)}>
             新增
           </Button>,<%}%>
         ]}
@@ -135,8 +132,8 @@ const Index = () => {
     {<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open && (
       <<%= addName %>
         <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open}
-        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel}
-        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type}
+        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel}<% if (formLength > 0 || editAPI || addAPI) { %>
+        <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type}<% } %>
         <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Value={<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Value}
         actionRef={actionRef}
       />
@@ -170,6 +167,9 @@ export function generateProTable(config: ProTableConfig): string {
     detailName,
     showDelete,
     deleteAPI,
+    formLength,
+    editAPI,
+    addAPI,
   } = config;
 
   return compiled({
@@ -185,5 +185,8 @@ export function generateProTable(config: ProTableConfig): string {
     detailName: detailName || "DetailModal",
     showDelete: showDelete ?? false,
     deleteAPI: deleteAPI || "delete",
+    formLength: formLength || 0,
+    editAPI: editAPI || false,
+    addAPI: addAPI || false,
   }).trim();
 }
