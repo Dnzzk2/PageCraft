@@ -13,7 +13,8 @@ import <%= detailName %> from './components/<%= detailName %>';<%}%>
 const Index = () => {
   const formRef = useRef();
   const actionRef = useRef();<% if (isSort) { %>
-  const [pageInfo, setPageInfo] = useState({ current: 1, pageSize: 10 });<% } %><%if (showAdd) {%><% if (formLength > 0 || editAPI || addAPI) { %>const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type, set<%= addName %>Type] = useState('C');<% } %>
+  const [pageInfo, setPageInfo] = useState({ current: 1, pageSize: 10 });<% } %><%if (showAdd) {%><% if (formLength > 0 || editAPI || addAPI) { %>
+  const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Type, set<%= addName %>Type] = useState('C');<% } %>
   const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Open, set<%= addName %>Open] = useState(false);
   const [<%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Value, set<%= addName %>Value] = useState({});<%}%><%if (showDetail) {%>
   const [<%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Open, set<%= detailName %>Open] = useState(false);
@@ -23,7 +24,8 @@ const Index = () => {
   const <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel = () => {
     set<%= addName %>Open(false);
   };
-  const to<%= addName %> = (<% if (formLength > 0 || editAPI || addAPI) { %>type, <% } %>record = {}) => {<% if (formLength > 0 || editAPI || addAPI) { %>set<%= addName %>Type(type);<% } %>
+  const to<%= addName %> = (<% if (formLength > 0 || editAPI || addAPI) { %>type, <% } %>record = {}) => {<% if (formLength > 0 || editAPI || addAPI) { %>
+    set<%= addName %>Type(type);<% } %>
     set<%= addName %>Value(record);
     set<%= addName %>Open(true);
   };<%}%><%if (showDetail) {%>
