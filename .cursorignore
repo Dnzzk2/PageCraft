@@ -1,0 +1,23 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+# 忽略临时文件和目录
+*.tmp
+*.log
+temp/
+cache/
+
+# 忽略构建输出目录
+build/
+dist/
+
+# 忽略依赖包
+node_modules/
+vendor/
+
+# 忽略特定类型的文件
+*.csv
+*.xlsx
+*.pdf
+
+# 忽略配置文件
+*.env
+*.config.js
