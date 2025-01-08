@@ -127,7 +127,7 @@ const <%= componentName %> = (props) => {
           checkFile={{
             maxSize: 1024,
           }}
-          max={2}<% if (field.required) { %>
+          max={1}<% if (field.required) { %>
           rules={[{ required: true, message: '请上传<%= field.label %>' }]}<% } %>
         /><% } else { %>
         <ProFormText
