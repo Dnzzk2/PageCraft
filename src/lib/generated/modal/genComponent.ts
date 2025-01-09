@@ -72,7 +72,7 @@ const <%= componentName %> = (props) => {
       <% } %>
       if (res.rspCode === '000000') {
         message.success(\`\${<%= lowerComponentName %>Type === 'C' ? '新增成功!' : '编辑成功'}\`);
-        on<%= componentName %>Cancel();
+        <%= lowerComponentName %>Cancel();
         actionRef.current.reload();
       } 
     } catch (error) {
