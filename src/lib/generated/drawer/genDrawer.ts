@@ -143,6 +143,7 @@ const <%= componentName %> = (props) => {
     <Drawer
       width={600}
       destroyOnClose
+      maskClosable={false}
       title={<% if (addAPI || editAPI) { %><%= lowerComponentName %>Type === 'C' ? '新增' : '编辑'<% } else { %>'抽屉'<% } %>}
       open={<%= lowerComponentName %>Open}
       onClose={<%= lowerComponentName %>Cancel}<% if (isFooter) { %>

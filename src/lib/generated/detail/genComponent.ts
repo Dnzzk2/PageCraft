@@ -41,10 +41,13 @@ const <%= componentName %> = (props) => {
     <Modal
       width={600}
       destroyOnClose
+      closable={false}
       title="详情"
       open={<%= lowerComponentName %>Open}
       onCancel={<%= lowerComponentName %>Cancel}
       footer={false}
+      okText="确定"
+      cancelText="取消"
     >
       <Spin spinning={spinning}>
         <Descriptions column={1}>
@@ -90,6 +93,7 @@ const <%= componentName %> = (props) => {
     <Drawer
       width={600}
       destroyOnClose
+      maskClosable={false}
       title="详情"
       open={<%= lowerComponentName %>Open}
       onClose={<%= lowerComponentName %>Cancel}

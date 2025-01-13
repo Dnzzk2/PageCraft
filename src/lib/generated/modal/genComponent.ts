@@ -140,16 +140,19 @@ const <%= componentName %> = (props) => {
     <Modal
       width={600}
       destroyOnClose
+      maskClosable={false}
+      okButtonProps={{ loading }}
       title={<% if (addAPI || editAPI) { %><%= lowerComponentName %>Type === 'C' ? '新增' : '编辑'<% } else { %>'弹窗'<% } %>}
       open={<%= lowerComponentName %>Open}
       onCancel={<%= lowerComponentName %>Cancel}
-      okButtonProps={{ loading }}
       onOk={async () => {<% if (addAPI || editAPI) { %>
         const values = await form.validateFields();
         await handleSubmit(values);
         <% } else { %>
         <%= lowerComponentName %>Cancel();<% } %>
       }}
+      okText="确定"
+      cancelText="取消"
     ><% if (addAPI || editAPI || fields.length > 0) { %>
       <ProForm form={form} submitter={false} layout="horizontal" {...formLayout}>
         {renderContent()}
