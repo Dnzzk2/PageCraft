@@ -96,7 +96,7 @@ const <%= componentName %> = (props) => {
           label="<%= field.label %>"
           placeholder="请选择<%= field.label %>"<% if (field.required) { %>
           rules={[{ required: true, message: '请选择<%= field.label %>' }]}<% } %>
-          options={[]}
+          valueEnum={new Map(LIST.map(item => [item.value, item.label]))}
         /><% } else if (field.fieldType === "date") { %>
         <ProFormDatePicker
           name="<%= field.name %>"
@@ -110,8 +110,7 @@ const <%= componentName %> = (props) => {
         /><% } else if (field.fieldType === "number") { %>
         <ProFormDigit
           name="<%= field.name %>"
-          label="<%= field.label %>"
-          fieldProps={{ precision: 0 }}<% if (field.required) { %>
+          label="<%= field.label %>"<% if (field.required) { %>
           rules={[{ required: true, message: '请输入<%= field.label %>' }]}<% } %>
         /><% } else if (field.fieldType === "upload") { %>
         <UploadFile
@@ -124,7 +123,7 @@ const <%= componentName %> = (props) => {
           checkFile={{
             maxSize: 1024,
           }}
-          max={2}<% if (field.required) { %>
+          max={1}<% if (field.required) { %>
           rules={[{ required: true, message: '请上传<%= field.label %>' }]}<% } %>
         /><% } else { %>
         <ProFormText

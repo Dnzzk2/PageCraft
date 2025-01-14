@@ -99,7 +99,7 @@ const <%= componentName %> = (props) => {
           label="<%= field.label %>"
           placeholder="请选择<%= field.label %>"<% if (field.required) { %>
           rules={[{ required: true, message: '请选择<%= field.label %>' }]}<% } %>
-          options={[]}
+          valueEnum={new Map(LIST.map(item => [item.value, item.label]))}
         /><% } else if (field.fieldType === "date") { %>
         <ProFormDatePicker
           name="<%= field.name %>"

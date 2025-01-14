@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "devIp": "node -e \"const os=require('os');const nets=os.networkInterfaces();let ip='0.0.0.0';for(const name of Object.keys(nets)){for(const net of nets[name]){if(!net.internal&&net.family==='IPv4'){ip=net.address;break;}}} console.log('\\x1b[36m启动地址: http://'+ip+':3000\\x1b[0m'); require('child_process').spawn('next',['dev','-H',ip,'-p','3000'],{stdio:'inherit',shell:true}).on('error',console.error);\"",
     "build": "next build",
     "start": "next start",

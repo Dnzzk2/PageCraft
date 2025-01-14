@@ -61,7 +61,8 @@ const Index = () => {
     },<% } %><% columns.forEach(function(col) { %>{
       title: '<%= col.title %>',
       dataIndex: '<%= col.dataIndex %>',<% if (col.valueType && col.valueType !== "input") { %>
-      valueType: '<%= col.valueType %>',<% } %><% if (col.hideInSearch) { %>
+      valueType: '<%= col.valueType %>',<% } %><% if (col.valueType== 'select') { %>
+      valueEnum:new Map(LIST.map(item => [item.value, item.label])),<% } %><% if (col.hideInSearch) { %>
       hideInSearch: true,<% } %>
     },<% }); %><%if (showAdd || showDetail || showDelete) {%>{
       title: '操作',
