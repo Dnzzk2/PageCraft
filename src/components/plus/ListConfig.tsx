@@ -10,7 +10,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { InfoIcon, PlusIcon, TrashIcon, Upload } from "lucide-react";
+import { PlusIcon, TrashIcon, Upload, ArrowUpDownIcon } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -237,6 +237,18 @@ export function ListConfig({ form, onImportOpen }: ListConfigProps) {
             >
               <PlusIcon className="w-4 h-4 mr-1" />
               新增列
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                const reversedColumns = [...columns].reverse(); // 反转字段数组
+                form.setValue("list.columns", reversedColumns); // 更新表单字段
+              }}
+              disabled={columns.length === 0}
+            >
+              <ArrowUpDownIcon className="w-4 h-4 mr-1" />
+              反转字段
             </Button>
           </div>
         </div>

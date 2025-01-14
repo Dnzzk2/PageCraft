@@ -177,7 +177,7 @@ export default function Plus() {
                   : col.valueType === "select"
                   ? FormFieldType.SELECT
                   : FormFieldType.INPUT,
-              required: false,
+              required: true,
             }),
           }));
           form.setValue(`${type}.fields`, fields, {

@@ -7,7 +7,7 @@ import {
   UploadListType,
   UploadAcceptType,
 } from "@/lib/types/plus";
-import { InfoIcon, PlusIcon, TrashIcon, Upload } from "lucide-react";
+import { PlusIcon, TrashIcon, Upload, ArrowUpDownIcon } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
@@ -365,13 +365,25 @@ export function FormConfig({ form, onImportOpen }: FormConfigProps) {
                     name: "",
                     label: "",
                     fieldType: FormFieldType.INPUT,
-                    required: false,
+                    required: true,
                   },
                 ]);
               }}
             >
               <PlusIcon className="w-4 h-4 mr-1" />
               添加字段
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => {
+                const reversedFields = [...fields].reverse(); // 反转字段数组
+                form.setValue("form.fields", reversedFields); // 更新表单字段
+              }}
+              disabled={fields.length === 0}
+            >
+              <ArrowUpDownIcon className="w-4 h-4 mr-1" />
+              反转字段
             </Button>
           </div>
         </div>
