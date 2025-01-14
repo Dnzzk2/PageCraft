@@ -10,7 +10,7 @@ const <%= baseName %>Cancel = () => {
   set<%= componentName %>Open(false);
 };
 
-const to<%= componentName %> = (<% if (isForm) { %> type,<% } %>record = {}) => {
+const handle<%= componentName %> = (<% if (isForm) { %> type,<% } %>record = {}) => {
   set<%= componentName %>Value(record);
   set<%= componentName %>Open(true);<% if (isForm) { %>
   set<%= componentName %>Type(type);<% } %>

@@ -24,7 +24,7 @@ const Index = () => {
   const <%= addName.charAt(0).toLowerCase() + addName.slice(1) %>Cancel = () => {
     set<%= addName %>Open(false);
   };
-  const to<%= addName %> = (<% if (formLength > 0 || editAPI || addAPI) { %>type, <% } %>record = {}) => {<% if (formLength > 0 || editAPI || addAPI) { %>
+  const handle<%= addName %> = (<% if (formLength > 0 || editAPI || addAPI) { %>type, <% } %>record = {}) => {<% if (formLength > 0 || editAPI || addAPI) { %>
     set<%= addName %>Type(type);<% } %>
     set<%= addName %>Value(record);
     set<%= addName %>Open(true);
@@ -32,7 +32,7 @@ const Index = () => {
   const <%= detailName.charAt(0).toLowerCase() + detailName.slice(1) %>Cancel = () => {
     set<%= detailName %>Open(false);
   };
-  const to<%= detailName %> = (record = {}) => {
+  const handle<%= detailName %> = (record = {}) => {
     set<%= detailName %>Value(record);
     set<%= detailName %>Open(true);
   };<%}%><%if (showDelete) {%>
@@ -72,10 +72,10 @@ const Index = () => {
       hideInSearch: true,
       render: (_, record) => (
         <Space split={<Divider type="vertical" />} size={0}><%if (showEdit) {%>
-          <Button type="link" onClick={() => to<%= addName %>('U', record)}>
+          <Button type="link" onClick={() => handle<%= addName %>('U', record)}>
             编辑
           </Button><%}%><%if (showDetail) {%>
-          <Button type="link" onClick={() => to<%= detailName %>(record)}>
+          <Button type="link" onClick={() => handle<%= detailName %>(record)}>
             详情
           </Button><%}%><%if (showDelete) {%>
           <Popconfirm
@@ -98,7 +98,7 @@ const Index = () => {
         <ProTable
         headerTitle=""
         toolBarRender={() => [<%if (showAdd) {%>
-          <Button type="primary" onClick={() => to<%= addName %>(<% if (formLength > 0 || editAPI || addAPI) { %> 'C' <% } %>)}>
+          <Button type="primary" onClick={() => handle<%= addName %>(<% if (formLength > 0 || editAPI || addAPI) { %> 'C' <% } %>)}>
             新增
           </Button>,<%}%>
         ]}
